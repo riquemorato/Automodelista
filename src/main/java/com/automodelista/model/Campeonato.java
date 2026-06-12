@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-package com.automodelista;
+package com.automodelista.model;
 
 import java.util.HashMap;
 
