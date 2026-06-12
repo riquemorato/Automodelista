@@ -91,21 +91,17 @@ public class Piloto extends PessoaAbstract {
 
     //Conversão de Registro - ref classe Cliente
     public static Piloto converterRegistros(HashMap<String, Object> registros) {
-        //herdados de PessoaAbstract
-        int IdPiloto = (int) registros.get("id");
-        String Nome = (String) registros.get("nome");
-        String Nacionalidade = (String) registros.get("nacionalidade");
-        int Idade = (int) registros.get("idade");
+        int idPiloto = (int) registros.get("id");
+        String nome = (String) registros.get("nome");
+        String nacionalidade = (String) registros.get("nacionalidade");
+        int idade = (int) registros.get("idade");
+        int numeroCarro = (int) registros.get("numero_carro");
+        int habilidade = (int) registros.get("habilidade");
+        int consistencia = (int) registros.get("consistencia");
+        int pontosCampeonato = (int) registros.get("pontos_campeonato");
+        int idEquipe = (int) registros.get("equipe_id");
 
-        //da classe Piloto
-        int NumeroCarro = (int) registros.get("numeroCarro");
-        int Habilidade = (int) registros.get("habilidade");
-        int Consistencia = (int) registros.get("consistencia");
-        int PontosCampeonato = (int) registros.get("pontos_campeonato");
-        int IdEquipe = (int) registros.get("idEquipe");
-
-        return new Piloto(IdPiloto,Nome, Nacionalidade, Idade, NumeroCarro, Habilidade, Consistencia, PontosCampeonato, IdEquipe);
-            
+        return new Piloto(idPiloto, nome, nacionalidade, idade, numeroCarro, habilidade, consistencia, pontosCampeonato, idEquipe);
     }
 
     //Calculo de score de Habilidade

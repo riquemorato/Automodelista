@@ -104,16 +104,15 @@ public class Carro {
     }
 
     public static Carro converterRegistros(HashMap<String, Object> registros) {
+        int idCarro = (int) registros.get("id");
+        String nome = (String) registros.get("nome");
+        int idEquipe = (int) registros.get("equipe_id");
+        int nivelMotor = (int) registros.get("nivel_motor");
+        int nivelAero = (int) registros.get("nivel_aero");
+        int nivelTransmissao = (int) registros.get("nivel_transmissao");
+        int nivelSuspensao = (int) registros.get("nivel_suspensao");
 
-        int IdCarro = (int) registros.get("id");
-        String Nome = (String) registros.get("nome");
-        int IdEquipe = (int) registros.get("equipeId");
-        int NivelMotor = (int) registros.get("nivelMotor");
-        int NivelAero = (int) registros.get("nivelAero");
-        int NivelTransmissao = (int) registros.get("nivelTransmissao");
-        int nivelSuspensao = (int) registros.get("nivelSuspensao");
-        
-        return new Carro(IdCarro, Nome, IdEquipe, NivelMotor, NivelAero, NivelTransmissao, nivelSuspensao);
+        return new Carro(idCarro, nome, idEquipe, nivelMotor, nivelAero, nivelTransmissao, nivelSuspensao);
     }
 
 
