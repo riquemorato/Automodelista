@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.bd.aulabd.model.Piloto;
+import com.automodelista.model.Piloto;
 
 import jakarta.annotation.PostConstruct;
 
@@ -41,9 +41,11 @@ public class PilotoDAO {
             piloto.getNacionalidade(), 
             piloto.getIdade(),
             piloto.getNumeroCarro(),
-            piloto.getHabilidade(), piloto.getConsistencia(), 0,
+            piloto.getHabilidade(),
+            piloto.getConsistencia(),
+            0,
             piloto.getEquipeId() == 0 ? null : piloto.getEquipeId()
-            );
+        );
     }
 
     public void atualizar(int id, Piloto piloto) {
@@ -54,7 +56,8 @@ public class PilotoDAO {
             piloto.getNumeroCarro(),
             piloto.getHabilidade(),
             piloto.getConsistencia(),
-            piloto.getEquipeId() == 0 ? null : p.getEquipeId(), id);
+            piloto.getEquipeId() == 0 ? null : piloto.getEquipeId(), id
+        );
     }
 
     public void atualizarPontos(int id, int pontos) {
