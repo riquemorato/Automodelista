@@ -6,7 +6,8 @@
 package com.automodelista.model;
 
 import java.util.HashMap;
-import com.automodelista.abstracts.PessoaAbstract;
+
+import com.automodelista.model.abstracts.PessoaAbstract;
 
 /**
  *
@@ -80,6 +81,12 @@ public class Piloto extends PessoaAbstract {
     public void setEquipeId(int e){
         this.equipeId = e;
     }
+    //Métodos
+    //Override getTipo de PessoaAbstract
+     @Override 
+     public String getTipo(){
+        return "Piloto";
+    } 
 
     //Conversão de Registro - ref classe Cliente
     public static Piloto converterRegistros(HashMap<String, Object> registro) {
