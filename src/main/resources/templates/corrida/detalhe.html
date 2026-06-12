@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title th:text="${corrida.nome}">Corrida</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"></head>
+<body class="bg-light"><div class="container py-4">
+
+  <div class="d-flex align-items-center gap-3 mb-1">
+    <h2 class="mb-0" th:text="${corrida.nome}"></h2>
+    <span class="badge fs-6"
+      th:classappend="${corrida.status.name() == 'FINALIZADA'} ? 'bg-success' : (${corrida.status.name() == 'EM_ANDAMENTO'} ? 'bg-warning text-dark' : 'bg-secondary')"
+      th:text="${corrida.status.descricao}"></span>
+  </div>
+  <p class="text-muted mb-4">
+    Circuito: <strong th:text="${corrida.circuito}"></strong> &nbsp;|&nbsp;
+    Rodada: <strong th:text="${corrida.rodada}"></strong>
+  </p>
+
+  <div class="row g-4">
+    <!-- Pilotos inscritos -->
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-3">
+        <div class="card-header"><strong>Pilotos Inscritos</strong></div>
+        <table class="table table-sm mb-0">
+          <thead class="table-light"><tr><th>Piloto</th><th>Estratégia</th><th>Pneu</th><th>Pos.</th></tr></thead>
+          <tbody>
+            <tr th:each="p : ${participacoes}">
+              <td th:text="${p.getPiloto() != null} ? ${p.getPiloto().getNome()} : '#' + ${p.getPilotoId()}"></td>
+              <td th:text="${p.tipoEstrategia}"></td>
+              <td th:text="${p.compoundPneu}"></td>
+              <td>
+                <span th:if="${p.posicaoFinal > 0}" class="badge bg-secondary" th:text="'P' + ${p.posicaoFinal}"></span>
+                <span th:unless="${p.posicaoFinal > 0}" class="text-muted">—</span>
+              </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(participacoes)}">
+              <td colspan="4" class="text-muted text-center">Nenhum piloto inscrito.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Form inscrição -->
+      <div class="card shadow-sm" th:unless="${corrida.status.name() == 'FINALIZADA'}">
+        <div class="card-header"><strong>Inscrever Piloto</strong></div>
+        <div class="card-body">
+          <form th:action="@{/corridas/{id}/inscrever(id=${corrida.id})}" method="post">
+            <div class="mb-2">
+              <label class="form-label">Piloto</label>
+              <select name="pilotoId" class="form-select" required>
+                <option value="">Selecione...</option>
+                <option th:each="p : ${pilotos}" th:value="${p.id}" th:text="${p.numeroCarro + ' — ' + p.nome}"></option>
+              </select>
+            </div>
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label">Estratégia</label>
+                <select name="tipoEstrategia" class="form-select">
+                  <option value="CONSERVADORA">Conservadora</option>
+                  <option value="BALANCEADA" selected>Balanceada</option>
+                  <option value="AGRESSIVA">Agressiva</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label">Composto</label>
+                <select name="compoundPneu" class="form-select">
+                  <option value="MACIO">Macio 🔴</option>
+                  <option value="MEDIO" selected>Médio 🟡</option>
+                  <option value="DURO">Duro ⚪</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-outline-primary w-100">Inscrever</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Simulação -->
+    <div class="col-md-6">
+      <div class="card shadow-sm border-danger" th:unless="${corrida.status.name() == 'FINALIZADA'}">
+        <div class="card-header bg-danger text-white"><strong>🏁 Simular Corrida</strong></div>
+        <div class="card-body">
+          <p class="card-text text-muted small mb-3">
+            Selecione a equipe cujo carro será usado como referência de performance para todos os pilotos inscritos.
+          </p>
+          <form th:action="@{/corridas/{id}/simular(id=${corrida.id})}" method="post">
+            <div class="mb-3">
+              <label class="form-label">Equipe (carro de referência)</label>
+              <select name="equipeId" class="form-select" required>
+                <option value="">Selecione a equipe...</option>
+                <option th:each="e : ${equipes}" th:value="${e.id}" th:text="${e.nome}"></option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-danger w-100">Simular Corrida</button>
+          </form>
+        </div>
+      </div>
+      <div class="alert alert-success" th:if="${corrida.status.name() == 'FINALIZADA'}">
+        ✅ Corrida finalizada. Veja os resultados na lista de inscritos.
+      </div>
+    </div>
+  </div>
+
+  <a th:href="@{/campeonatos}" class="btn btn-link btn-sm mt-3">← Campeonatos</a>
+</div></body></html>

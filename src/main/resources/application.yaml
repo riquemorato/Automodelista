@@ -1,18 +1,12 @@
 server:
-  port: 8081
- 
+  port: 8080
+
 spring:
   datasource:
-    platform: postgres
-    url: jdbc:postgresql://127.0.0.1:5432/aula
+    url: jdbc:postgresql://127.0.0.1:5432/apex_motorsport
     username: postgres
     password: root
-    driverClassName: org.postgresql.Driver
- 
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
- 
+    driver-class-name: org.postgresql.Driver
   sql:
     init:
       mode: always

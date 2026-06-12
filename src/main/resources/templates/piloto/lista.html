@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Pilotos</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"></head>
+<body class="bg-light"><div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Pilotos</h2>
+    <a th:href="@{/pilotos/novo}" class="btn btn-primary btn-sm">+ Novo Piloto</a>
+  </div>
+  <table class="table table-bordered table-hover bg-white">
+    <thead class="table-dark">
+      <tr><th>#</th><th>Nº</th><th>Nome</th><th>Nac.</th><th>Hab.</th><th>Cons.</th><th>Pontos</th><th>Ações</th></tr>
+    </thead>
+    <tbody>
+      <tr th:each="p : ${pilotos}">
+        <td th:text="${p.id}"></td>
+        <td th:text="${p.numeroCarro}"></td>
+        <td th:text="${p.nome}"></td>
+        <td th:text="${p.nacionalidade}"></td>
+        <td th:text="${p.habilidade}"></td>
+        <td th:text="${p.consistencia}"></td>
+        <td><strong th:text="${p.pontosCampeonato}"></strong></td>
+        <td><a th:href="@{/pilotos/{id}/editar(id=${p.id})}" class="btn btn-sm btn-outline-secondary">Editar</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <a th:href="@{/}" class="btn btn-link btn-sm">← Início</a>
+</div></body></html>
