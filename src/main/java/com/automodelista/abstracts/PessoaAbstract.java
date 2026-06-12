@@ -5,17 +5,25 @@ package com.automodelista.abstracts;
  *
  * @author Henrique
  */
-public class Pessoa {
+public abstract class PessoaAbstract {
+
     protected int id;
     protected String nome;
     protected String nacionalidade;
     protected int idade;
     
     //Constructors
-    protected Pessoa() {
+    protected PessoaAbstract() {
     }
 
-    protected Pessoa(String nome, String nacionalidade, int idade) {
+    protected PessoaAbstract(String nome, String nacionalidade, int idade) {
+        this.nome = nome;
+        this.nacionalidade = nacionalidade;
+        this.idade = idade;
+    }
+
+    protected PessoaAbstract(int id, String nome, String nacionalidade, int idade) {
+        this.id = id;
         this.nome = nome;
         this.nacionalidade = nacionalidade;
         this.idade = idade;
