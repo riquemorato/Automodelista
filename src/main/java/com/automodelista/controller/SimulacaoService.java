@@ -96,8 +96,8 @@ public class SimulacaoService {
         }
     }
 
-    // Passo 2: quem está correndo?
-    private List<ParticipacaoCorrida> carregarPilotosParticipantes(int corridaId) {
+    // Listar pilotos cadastrados na corrida
+    private List<ParticipacaoCorrida> listarPilotosParticipantes(int corridaId) {
         List<ParticipacaoCorrida> participacoes = participacaoDAO.obterPorCorrida(corridaId);
         if (participacoes.isEmpty())
             throw new IllegalStateException("Nenhum piloto inscrito nesta corrida.");
@@ -107,81 +107,3 @@ public class SimulacaoService {
         }
         return participacoes;
     }
-
-    // Passo 3: qual carro vamos usar como referência?
-    private Carro carregarCarroEquipe(int equipeId) {
-        Carro carroEquipe = carroDAO.obterPorEquipe(equipeId);
-        
-        //equipe precisa ter um carro cadastrado
-        if (carroEquipe == null){
-            throw new IllegalStateException("Equipe não possui carro cadastrado.");
-        }
-            
-        return carroEquipe;
-    }
-
-    // Passo 4: calcula o score de cada piloto e sorteia falha mecânica
-    private List<Ficha> calcularFichas(List<ParticipacaoCorrida> participantes, Carro carro) {
-        List<Ficha> fichas = new ArrayList<>();
-        for (ParticipacaoCorrida pilotoParticipante : participantes) {
-            EstrategiaAbstract estrategia = EstrategiaAbstract.criar(p.getTipoEstrategia());
-            ScoreSimulacao score = ScoreSimulacao.calcular(pilotoParticipante.getPiloto(), carro, estrategia);
-            boolean abandonou = sortearFalhaMecanica(estrategia);
-            fichas.add(new Ficha(pilotoParticipante, score, abandonou));
-        }
-        return fichas;
-    }
-
-    private boolean sortearFalhaMecanica(EstrategiaAbstract estrategia) {
-        double riscoBase = 0.05;
-        return Math.random() < riscoBase * estrategia.getMultiplicadorRisco();
-    }
-
-    // Passo 5: define quem ficou na frente de quem
-    private void ordenarPorDesempenho(List<Ficha> fichas) {
-        fichas.sort(Comparator
-            .comparing(Ficha::abandonou)                                        // não-DNF primeiro
-            .thenComparing(f -> f.score().total(), Comparator.reverseOrder())); // maior score primeiro
-    }
-
-    // Passo 6: transforma a ordem em posição (P1, P2...) e pontos
-    private List<ResultadoCorridaRecord> montarResultados(List<Ficha> fichas) {
-        List<ResultadoCorridaRecord> resultados = new ArrayList<>();
-        for (int i = 0; i < fichas.size(); i++) {
-            Ficha ficha = fichas.get(i);
-            int posicao = i + 1;
-            int pontos  = calcularPontos(posicao, ficha.abandonou());
-
-            resultados.add(new ResultadoCorridaRecord(
-                ficha.participacao().getPiloto(),
-                ficha.score().total(),
-                ficha.abandonou(),
-                posicao,
-                pontos
-            ));
-        }
-        return resultados;
-    }
-
-    private int calcularPontos(int posicao, boolean abandonou) {
-        if (abandonou || posicao > TABELA_PONTOS.length) return 0;
-        return TABELA_PONTOS[posicao - 1];
-    }
-
-    // Passo 7: grava posição, pontos e atualiza o campeonato
-    private void salvarResultados(List<ResultadoCorridaRecord> resultados, List<Ficha> fichas) {
-        for (int i = 0; i < resultados.size(); i++) {
-            ResultadoCorridaRecord resultado = resultados.get(i);
-            ParticipacaoCorrida participacao = fichas.get(i).participacao();
-
-            participacao.setPosicaoFinal(resultado.posicao());
-            participacao.setPontosObtidos(resultado.pontosObtidos());
-            participacao.setAbandonou(resultado.abandonou());
-            participacaoDAO.atualizarResultado(participacao);
-
-            if (resultado.pontuou()) {
-                pilotoDAO.atualizarPontos(participacao.getPilotoId(), resultado.pontosObtidos());
-            }
-        }
-    }
-}
