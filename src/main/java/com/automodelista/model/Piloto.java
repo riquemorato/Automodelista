@@ -31,6 +31,7 @@ public class Piloto extends PessoaAbstract {
         this.consistencia = consistencia;
     }
 
+    //construtor para Select
     public Piloto(int id, String nome, String nacionalidade, int idade, int numeroCarro, int habilidade, int consistencia, int pontosCampeonato, int equipeId) {
     super(id, nome, nacionalidade, idade);
     this.numeroCarro = numeroCarro;
@@ -89,23 +90,22 @@ public class Piloto extends PessoaAbstract {
     } 
 
     //Conversão de Registro - ref classe Cliente
-    public static Piloto converterRegistros(HashMap<String, Object> registro) {
-        Piloto piloto = new Piloto();
-
+    public static Piloto converterRegistros(HashMap<String, Object> registros) {
         //herdados de PessoaAbstract
-        piloto.setId((int) registro.get("id")); //herdados de PessoaAbstract
-        piloto.setNome((String) registro.get("nome"));
-        piloto.setNacionalidade((String) registro.get("nacionalidade"));
-        piloto.setIdade((int) registro.get("idade"));
-        //setters da classe piloto
-        piloto.setNumeroCarro((int) registro.get("numero_carro"));
-        piloto.setHabilidade((int) registro.get("habilidade"));
-        piloto.setConsistencia((int) registro.get("consistencia"));
-        piloto.setPontosCampeonato((int) registro.get("pontos_campeonato"));
-        if (registro.get("equipe_id") != null) {
-            piloto.setEquipeId((int) registro.get("equipe_id"));
-        }
-        return piloto;
+        int IdPiloto = (int) registros.get("id");
+        String Nome = (String) registros.get("nome");
+        String Nacionalidade = (String) registros.get("nacionalidade");
+        int Idade = (int) registros.get("idade");
+
+        //da classe Piloto
+        int NumeroCarro = (int) registros.get("numeroCarro");
+        int Habilidade = (int) registros.get("habilidade");
+        int Consistencia = (int) registros.get("consistencia");
+        int PontosCampeonato = (int) registros.get("pontos_campeonato");
+        int IdEquipe = (int) registros.get("idEquipe");
+
+        return new Piloto(IdPiloto,Nome, Nacionalidade, Idade, NumeroCarro, Habilidade, Consistencia, PontosCampeonato, IdEquipe);
+            
     }
 
     //Calculo de score de Habilidade

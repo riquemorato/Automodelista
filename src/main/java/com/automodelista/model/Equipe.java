@@ -22,12 +22,13 @@ public class Equipe {
         this.orcamento = orcamento;
     }
     
+    //construtor para Select
     public Equipe(int id, String nome, double orcamento) {
         this.id = id;
         this.nome = nome;
         this.orcamento = orcamento;
     }
-    
+
     //Getters
     public int getId() {
         return id;
@@ -74,11 +75,10 @@ public class Equipe {
     //Conversao de registros
     public static Equipe converterRegistros(HashMap<String, Object> registros) {
 
-        int idEquipe = (int) registros.get("id");
-        String nome = (String) registros.get("nome");
-        double orcamento = (double) registros.get("orcamento");
+        int IdEquipe = (int) registros.get("id");
+        String Nome = (String) registros.get("nome");
+        double Orcamento = (double) registros.get("orcamento");
 
-        return new Equipe(idEquipe, nome, orcamento); //Tomar cuidado com a ordem.
-
+        return new Equipe(IdEquipe, Nome, Orcamento); //Tomar cuidado com a ordem.
     }
 }
