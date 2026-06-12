@@ -1,0 +1,84 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+
+package com.automodelista.model;
+
+import com.bd.aulabd.model.enums.StatusCorrida;
+
+/**
+ *
+ * @author Henrique
+ */
+public class Corrida {
+    private int id;
+    private String nome;
+    private String circuito;
+    private int rodada;
+    private StatusCorrida status;
+    private int campeonatoId;
+
+    //Constructors
+    public Corrida() {
+    }
+
+    public Corrida(String nome, String circuito, int rodada, int campeonatoId) {
+        this.nome = nome; this.circuito = circuito;
+        this.rodada = rodada;
+        this.campeonatoId = campeonatoId;
+        this.status = StatusCorrida.PENDENTE;
+    }
+
+    //Construtor para Select
+
+
+    //Getters
+    public int getId(){
+        return id;
+    }
+    
+    public String getNome(){
+        return nome;
+    }
+
+    public String getCircuito(){
+        return circuito;
+    }
+    
+    public int getRodada(){
+        return rodada;
+    }
+    
+    public StatusCorrida getStatus(){
+        return status;
+    }
+
+    public int getCampeonatoId(){
+        return campeonatoId;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public void setNome(String nome){
+        this.nome = nome;
+    }
+
+    public void setCircuito(String circuito){
+        this.circuito = circuito;
+    }
+
+    public void setRodada(int rodada){
+        this.rodada = rodada;
+    }
+
+    public void setStatus(StatusCorrida statusCorrida){
+        this.status = statusCorrida;
+    }
+
+    public void setCampeonatoId(int campeonatoId){
+        this.campeonatoId = campeonatoId;
+    }
+}
