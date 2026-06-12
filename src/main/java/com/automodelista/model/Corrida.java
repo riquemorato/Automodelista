@@ -7,7 +7,8 @@ package com.automodelista.model;
 
 import java.util.HashMap;
 
-import com.bd.aulabd.model.enums.StatusCorrida;
+import com.automodelista.model.enums.StatusCorrida;
+
 
 /**
  *
@@ -99,11 +100,10 @@ public class Corrida {
         String Nome = (String) registros.get("nome");
         String Circuito = (String) registros.get("circuito");
         int Rodada = (int) registros.get("rodada");
-        StatusCorrida StatusCorrida = (StatusCorrida) registros.get("status");
-        int CampeonatoId = (int) registros.get("campeonatoId");
+        StatusCorrida Status = StatusCorrida.valueOf((String) registros.get("status"));
+        int CampeonatoId = (int) registros.get("campeonato_Id");
 
-
-        return new Corrida(IdCorrida, Nome, Circuito, Rodada, StatusCorrida, CampeonatoId); //Tomar cuidado com a ordem.
+        return new Corrida(IdCorrida, Nome, Circuito, Rodada, Status, CampeonatoId); //Tomar cuidado com a ordem.
 
     }
 
