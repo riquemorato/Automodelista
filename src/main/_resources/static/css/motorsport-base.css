@@ -1,0 +1,302 @@
+/* ===================================================================
+   APEX RACING — Base compartilhada
+   static/css/motorsport-base.css
+   Importado por team.html e race.html
+=================================================================== */
+
+/* ── Variáveis globais ──────────────────────────────────────── */
+:root {
+    /* Superfícies */
+    --bg-base:       #09090f;
+    --bg-surface:    #10101a;
+    --bg-card:       #16161f;
+    --bg-card-hover: #1c1c28;
+
+    /* Bordas */
+    --border-subtle: rgba(255, 255, 255, 0.07);
+    --border-accent: rgba(255, 255, 255, 0.13);
+
+    /* Texto */
+    --text-primary:   #e6e8f0;
+    --text-secondary: #878fa8;
+    --text-muted:     #454d64;
+
+    /* Cor da equipe — sobrescreva por equipe */
+    --team:        #e8002d;
+    --team-dim:    rgba(232, 0, 45, 0.12);
+    --team-border: rgba(232, 0, 45, 0.28);
+
+    /* Timing */
+    --fastest:   #b45cff;  /* roxo  — volta mais rápida geral */
+    --pb:        #22c55e;  /* verde — melhor pessoal */
+    --slow:      #fbbf24;  /* amarelo — setor lento / amarelo */
+
+    /* Compostos de pneu */
+    --tyre-soft:  #e8002d;
+    --tyre-med:   #fbbf24;
+    --tyre-hard:  #e6e8f0;
+    --tyre-inter: #22c55e;
+    --tyre-wet:   #3b82f6;
+
+    /* Bandeiras */
+    --flag-green:  #22c55e;
+    --flag-yellow: #fbbf24;
+    --flag-red:    #ef4444;
+    --flag-sc:     #fbbf24;
+    --flag-vsc:    #f97316;
+    --flag-chk:    #e6e8f0;
+
+    --sidebar-width: 210px;
+}
+
+/* ── Reset ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar               { width: 4px; height: 4px; }
+::-webkit-scrollbar-track         { background: var(--bg-base); }
+::-webkit-scrollbar-thumb         { background: var(--border-accent); border-radius: 2px; }
+
+/* ── Sidebar compartilhada ──────────────────────────────────── */
+.sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--bg-surface);
+    border-right: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    overflow-y: auto;
+}
+
+.sidebar-brand {
+    padding: 18px 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-badge {
+    width: 34px; height: 34px;
+    border-radius: 6px;
+    background: var(--team-dim);
+    border: 1px solid var(--team-border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+
+.brand-badge i { color: var(--team); font-size: 16px; }
+
+.brand-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    line-height: 1.1;
+}
+
+.brand-season { font-size: 10px; color: var(--text-muted); letter-spacing: 1px; }
+
+.nav-section-label {
+    padding: 14px 14px 4px;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 14px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    transition: background 0.12s, color 0.12s;
+    position: relative;
+}
+
+.sidebar-nav a:hover {
+    background: rgba(255,255,255,0.04);
+    color: var(--text-primary);
+}
+
+.sidebar-nav a.active {
+    background: var(--team-dim);
+    color: var(--team);
+}
+
+.sidebar-nav a.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--team);
+    border-radius: 0 2px 2px 0;
+}
+
+.sidebar-nav a i { font-size: 14px; width: 16px; flex-shrink: 0; }
+
+/* Botão de troca de modo (Equipe ↔ Corrida) */
+.sidebar-mode-btn {
+    margin: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 12px;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.sidebar-mode-btn:hover {
+    border-color: var(--team-border);
+    color: var(--team);
+}
+
+.sidebar-mode-btn i { font-size: 13px; }
+
+/* ── Layout ─────────────────────────────────────────────────── */
+.main {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Topbar ─────────────────────────────────────────────────── */
+.topbar {
+    position: sticky; top: 0;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 0 20px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 50;
+}
+
+.topbar-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.topbar-title i { font-size: 13px; color: var(--text-muted); }
+
+/* ── Card base ──────────────────────────────────────────────── */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0,0,0,0.15);
+}
+
+.card-body { padding: 14px; }
+
+/* ── Section title ──────────────────────────────────────────── */
+.sec-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.sec-title i { font-size: 13px; }
+
+/* ── Badges ─────────────────────────────────────────────────── */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+}
+
+.badge-team   { background: var(--team-dim); color: var(--team); border: 1px solid var(--team-border); }
+.badge-green  { background: rgba(34,197,94,0.1);  color: var(--pb);    border: 1px solid rgba(34,197,94,0.22); }
+.badge-amber  { background: rgba(251,191,36,0.1); color: var(--slow);  border: 1px solid rgba(251,191,36,0.22); }
+.badge-purple { background: rgba(180,92,255,0.1); color: var(--fastest); border: 1px solid rgba(180,92,255,0.22); }
+.badge-muted  { background: rgba(70,80,100,0.12); color: var(--text-muted); border: 1px solid rgba(70,80,100,0.2); }
+
+/* ── Composto de pneu ───────────────────────────────────────── */
+.tyre {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    flex-shrink: 0;
+    border: 1.5px solid;
+}
+
+.tyre-S { background: rgba(232,0,45,0.15);  border-color: var(--tyre-soft);  color: var(--tyre-soft); }
+.tyre-M { background: rgba(251,191,36,0.12); border-color: var(--tyre-med);   color: var(--tyre-med); }
+.tyre-H { background: rgba(230,232,240,0.08); border-color: var(--tyre-hard); color: var(--tyre-hard); }
+.tyre-I { background: rgba(34,197,94,0.1);   border-color: var(--tyre-inter); color: var(--tyre-inter); }
+.tyre-W { background: rgba(59,130,246,0.12); border-color: var(--tyre-wet);  color: var(--tyre-wet); }
+
+/* ── Link sutil ─────────────────────────────────────────────── */
+.link-sm {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.12s;
+}
+.link-sm:hover { color: var(--text-secondary); }
+
+/* ── Utilities ──────────────────────────────────────────────── */
+.mono    { font-family: 'IBM Plex Mono', monospace; }
+.text-xs { font-size: 11px; color: var(--text-muted); }
+.text-sm { font-size: 12px; color: var(--text-secondary); }
+.text-team { color: var(--team); }
+
+@media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main    { margin-left: 0; }
+}

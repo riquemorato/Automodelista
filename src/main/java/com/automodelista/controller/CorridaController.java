@@ -21,6 +21,7 @@ import com.automodelista.model.ResultadoCorridaRecord;
 import com.automodelista.service.CorridaService;
 import com.automodelista.service.EquipeService;
 import com.automodelista.service.PilotoService;
+import com.automodelista.service.SimulacaoService;
 
 /**
  *
@@ -54,16 +55,18 @@ public class CorridaController {
     }
 
     @PostMapping("/{id}/simular")
-    public String simular(
-        @PathVariable int id,
-        @RequestParam int equipeId,
-        Model model) {
-            context.getBean(CorridaService.class).iniciarCorrida(id);
+    public String simular(@PathVariable int id, @RequestParam int equipeId, Model model) {
+        try {
+         context.getBean(CorridaService.class).iniciarCorrida(id);
+        } catch (IllegalStateException e) {
+        // FIX: Corrida já está em andamento (ex: tentativa anterior falhou após este ponto) — segue normalmente
+    }
 
-            List<ResultadoCorridaRecord> resultados = context.getBean(SimulacaoService.class).simularCorrida(id, equipeId);
-            model.addAttribute("resultados", resultados);
-            model.addAttribute("corrida", context.getBean(CorridaService.class).obterPorId(id));
-            return "corrida/resultado";
+    List<ResultadoCorridaRecord> resultados = context.getBean(SimulacaoService.class).simularCorrida(id, equipeId);
+    
+    model.addAttribute("resultados", resultados);
+    model.addAttribute("corrida", context.getBean(CorridaService.class).obterPorId(id));
+    return "corrida/resultado";
     }
 
 }

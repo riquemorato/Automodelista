@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${equipe?.nome} ?: 'Apex Racing — Gestão de Equipe'">Apex Racing — Gestão</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link th:href="@{/css/motorsport-base.css}" href="../static/css/motorsport-base.css" rel="stylesheet">
+    <link th:href="@{/css/team.css}"            href="../static/css/team.css"            rel="stylesheet">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-badge"><i class="bi bi-flag-fill"></i></div>
+        <div>
+            <div class="brand-name" th:text="${equipe?.nome} ?: 'Apex Racing'">Apex Racing</div>
+            <div class="brand-season" th:text="${temporada} ?: 'TEMPORADA 2024'">TEMPORADA 2024</div>
+        </div>
+    </div>
+
+    <div class="nav-section-label">Gestão</div>
+    <nav class="sidebar-nav">
+        <a th:href="@{/equipe}"        href="/equipe"        class="active">
+            <i class="bi bi-speedometer2"></i>Visão Geral
+        </a>
+        <a th:href="@{/equipe/pilotos}" href="/equipe/pilotos">
+            <i class="bi bi-person-badge"></i>Pilotos
+        </a>
+        <a th:href="@{/equipe/staff}"   href="/equipe/staff">
+            <i class="bi bi-people"></i>Staff
+        </a>
+        <a th:href="@{/equipe/patrocinadores}" href="/equipe/patrocinadores">
+            <i class="bi bi-currency-euro"></i>Patrocinadores
+        </a>
+    </nav>
+
+    <div class="nav-section-label">Temporada</div>
+    <nav class="sidebar-nav">
+        <a th:href="@{/equipe/calendario}" href="/equipe/calendario">
+            <i class="bi bi-calendar3"></i>Calendário
+        </a>
+        <a th:href="@{/equipe/standings}"  href="/equipe/standings">
+            <i class="bi bi-trophy"></i>Standings
+        </a>
+    </nav>
+
+    <div class="nav-section-label">Engenharia</div>
+    <nav class="sidebar-nav">
+        <a th:href="@{/equipe/desenvolvimento}" href="/equipe/desenvolvimento">
+            <i class="bi bi-wrench-adjustable"></i>Desenvolvimento
+        </a>
+    </nav>
+
+    <a th:href="@{/corrida}" href="/corrida" class="sidebar-mode-btn">
+        <i class="bi bi-broadcast"></i>
+        Ir para Corrida →
+    </a>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+    <header class="topbar">
+        <div class="topbar-title">
+            <i class="bi bi-grid-3x3-gap-fill"></i>
+            Visão Geral da Equipe
+        </div>
+        <span class="text-xs mono" id="clock">--:--:--</span>
+        <a th:href="@{/corrida}" href="/corrida" class="badge badge-team" style="text-decoration:none; padding: 5px 12px;">
+            <i class="bi bi-broadcast" style="font-size:11px;"></i> Live Timing
+        </a>
+    </header>
+
+    <div class="content">
+
+        <!-- ── PILOTOS + STANDINGS ── -->
+        <div class="row g-3 mb-3">
+
+            <!-- PILOTO 1 -->
+            <div class="col-12 col-md-4">
+                <div class="driver-card" th:object="${pilotos[0]}">
+                    <div class="driver-number" th:text="${pilotos[0].numero}">14</div>
+                    <div class="driver-card-top">
+                        <div class="driver-avatar" th:text="${#strings.toUpperCase(#strings.substring(pilotos[0].sobrenome, 0, 2))}">HA</div>
+                        <div>
+                            <div class="driver-name" th:text="${pilotos[0].nomeCompleto}">Alex Hartmann</div>
+                            <div class="driver-meta">
+                                <span th:text="${pilotos[0].nacionalidade}">Alemanha</span>
+                                &nbsp;·&nbsp;
+                                <span th:text="${pilotos[0].idade} + ' anos'">28 anos</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="driver-stats">
+                        <div class="driver-stat">
+                            <div class="driver-stat-val" th:text="${pilotos[0].vitorias}">3</div>
+                            <div class="driver-stat-label">Vitórias</div>
+                        </div>
+                        <div class="driver-stat">
+                            <div class="driver-stat-val" th:text="${pilotos[0].poles}">2</div>
+                            <div class="driver-stat-label">Poles</div>
+                        </div>
+                        <div class="driver-stat">
+                            <div class="driver-stat-val" th:text="${pilotos[0].podios}">7</div>
+                            <div class="driver-stat-label">Pódios</div>
+                        </div>
+                        <div class="driver-stat">
+                            <div class="driver-stat-val text-team" th:text="${pilotos[0].pontos}">98</div>
+                            <div class="driver-stat-label">Pontos</div>
+                        </div>
+                    </div>
+                    <div class="driver-contract">
+                        <span>Contrato até</span>
+                        <span class="contract-end" th:text="${pilotos[0].contratoAte}">2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PILOTO 2 -->
+            <div class="col-12 col-md-4">
+                <div class="driver-card" th:object="${pilotos[1]}">
+                    <div class="driver-number" th:text="${pilotos[1].numero}">22</div>
+                    <div class="driver-card-top">
+                        <div class="driver-avatar" th:text="${#strings.toUpperCase(#strings.substring(pilotos[1].sobrenome, 0, 2))}">DE</div>
+                        <div>
+                            <div class="driver-name" th:text="${pilotos[1].nomeCompleto}">Marco DeLuca</div>
+                            <div class="driver-meta">
+                                <span th:text="${pilotos[1].nacionalidade}">Itália</span>
+                                &nbsp;·&nbsp;
+                                <span th:text="${pilotos[1].idade} + ' anos'">25 anos</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="driver-stats">
+                        <div class="driver-stat">
+                            <div class="driver-stat-val" th:text="${pilotos[1].vitorias}">1</div>
+                            <div class="driver-stat-label">Vitórias</div>
+                        </div>
+                        <div class="driver-stat">
+                            <div class="driver-stat-val" th:text="${pilotos[1].poles}">1</div>
+                            <div class="driver-stat-label">Poles</div>
+                        </div>
+                        <div class="driver-stat">
+                            <div class="driver-stat-val" th:text="${pilotos[1].podios}">4</div>
+                            <div class="driver-stat-label">Pódios</div>
+                        </div>
+                        <div class="driver-stat">
+                            <div class="driver-stat-val text-team" th:text="${pilotos[1].pontos}">71</div>
+                            <div class="driver-stat-label">Pontos</div>
+                        </div>
+                    </div>
+                    <div class="driver-contract">
+                        <span>Contrato até</span>
+                        <span class="contract-end" th:text="${pilotos[1].contratoAte}">2025</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STANDINGS PILOTOS -->
+            <div class="col-12 col-md-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <span class="sec-title"><i class="bi bi-trophy"></i>Campeonato — Pilotos</span>
+                    </div>
+                    <table class="standings-table">
+                        <thead>
+                        <tr>
+                            <th>Pos</th><th>Piloto</th><th>Pts</th><th>Gap</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="s, i : ${standingsPilotos}"
+                            th:classappend="${s.nossoPiloto} ? ' our-driver'">
+                            <td>
+                                <span class="pos-num"
+                                      th:classappend="${i.index == 0} ? ' p1' : (${i.index == 1} ? ' p2' : (${i.index == 2} ? ' p3' : ''))"
+                                      th:text="${i.index + 1}">1</span>
+                            </td>
+                            <td>
+                                <div th:text="${s.piloto.sobrenome}">Verstappen</div>
+                                <div class="text-xs" th:text="${s.piloto.equipe}">Red Bull</div>
+                            </td>
+                            <td><span class="pts-val" th:text="${s.pontos}">295</span></td>
+                            <td><span class="pts-gap" th:text="${s.gap}">—</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── PATROCINADORES ── -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <span class="sec-title"><i class="bi bi-currency-euro"></i>Patrocinadores & Objetivos</span>
+                <a th:href="@{/equipe/patrocinadores}" href="#" class="link-sm">gerenciar →</a>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-12 col-md-4" th:each="p : ${patrocinadores}">
+                        <div class="sponsor-card">
+                            <div class="sponsor-header">
+                                <div>
+                                    <div class="sponsor-name" th:text="${p.nome}">PETROX</div>
+                                    <div class="sponsor-tier">
+                                        <i class="bi bi-patch-check-fill" style="font-size:10px;"></i>
+                                        <span th:text="${p.tier}">Title Sponsor</span>
+                                    </div>
+                                </div>
+                                <div class="sponsor-value" th:text="${p.valorContrato}">€4.2M</div>
+                            </div>
+                            <div th:each="obj : ${p.objetivos}" class="sponsor-objective">
+                                <div class="obj-header">
+                                    <span th:text="${obj.descricao}">Top 5 em 8 corridas</span>
+                                    <span th:text="${obj.progresso + '/' + obj.meta}">5/8</span>
+                                </div>
+                                <div class="obj-progress">
+                                    <div class="obj-fill"
+                                         th:classappend="${obj.percentual >= 100} ? ' done' : (${obj.percentual < 40} ? ' warn' : '')"
+                                         th:style="'width: ' + ${obj.percentual} + '%'">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── CALENDÁRIO ── -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <span class="sec-title"><i class="bi bi-calendar3"></i>Calendário da Temporada</span>
+                <span class="text-xs" th:text="${'Rodada ' + corridaAtual + ' de ' + totalRodadas}">Rodada 8 de 24</span>
+            </div>
+            <div class="card-body" style="padding: 10px 14px;">
+                <div class="calendar-scroll">
+                    <div class="calendar-track" id="calTrack">
+                        <!-- th:each="ev : ${eventos}" -->
+                        <div th:each="ev : ${eventos}"
+                             class="cal-event"
+                             th:classappend="${ev.status.name() == 'CONCLUIDO'} ? ' completed' : (${ev.status.name() == 'ATUAL'} ? ' current' : '')">
+                            <div class="cal-round" th:text="'R' + ${ev.rodada}">R01</div>
+                            <div class="cal-name" th:text="${ev.nome}">Bahrain GP</div>
+                            <div class="cal-date" th:text="${#temporals.format(ev.data, 'dd MMM')}">02 Mar</div>
+                            <div th:if="${ev.status.name() == 'CONCLUIDO'}" class="cal-result">
+                                <span class="res-pill" th:text="'#' + ${ev.resultado.pos1}">P3</span>
+                                <span class="res-pill" th:text="'#' + ${ev.resultado.pos2}">P7</span>
+                            </div>
+                            <div th:if="${ev.tipo.name() != 'CORRIDA'}" class="cal-event-type"
+                                 th:text="${ev.tipo.descricao}">Demo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── KANBAN DE DESENVOLVIMENTO ── -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <span class="sec-title"><i class="bi bi-kanban"></i>Desenvolvimento do Carro</span>
+                <a href="#" class="link-sm">ver tudo →</a>
+            </div>
+            <div class="card-body">
+                <div class="kanban-board" id="kanbanBoard">
+
+                    <div class="kanban-col" data-col="BACKLOG">
+                        <div class="kanban-col-header">
+                            <span class="kanban-col-title">Backlog</span>
+                            <span class="kanban-count" id="cnt-BACKLOG">0</span>
+                        </div>
+                        <div class="kanban-col-body" data-dropzone="BACKLOG"></div>
+                    </div>
+
+                    <div class="kanban-col" data-col="DESENVOLVIMENTO">
+                        <div class="kanban-col-header">
+                            <span class="kanban-col-title">Em Desenvolvimento</span>
+                            <span class="kanban-count" id="cnt-DESENVOLVIMENTO">0</span>
+                        </div>
+                        <div class="kanban-col-body" data-dropzone="DESENVOLVIMENTO"></div>
+                    </div>
+
+                    <div class="kanban-col" data-col="TESTE">
+                        <div class="kanban-col-header">
+                            <span class="kanban-col-title">Em Teste</span>
+                            <span class="kanban-count" id="cnt-TESTE">0</span>
+                        </div>
+                        <div class="kanban-col-body" data-dropzone="TESTE"></div>
+                    </div>
+
+                    <div class="kanban-col" data-col="HOMOLOGADO">
+                        <div class="kanban-col-header">
+                            <span class="kanban-col-title">Homologado</span>
+                            <span class="kanban-count" id="cnt-HOMOLOGADO">0</span>
+                        </div>
+                        <div class="kanban-col-body" data-dropzone="HOMOLOGADO"></div>
+                    </div>
+                </div>
+
+                <!--
+                    Dados do kanban injetados como JSON via atributo data.
+                    No controller:
+                      model.addAttribute("kanbanJson", objectMapper.writeValueAsString(itens));
+                -->
+                <div id="kanbanData" th:data-items="${kanbanJson}" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- ── STAFF ── -->
+        <div class="card">
+            <div class="card-header">
+                <span class="sec-title"><i class="bi bi-people"></i>Staff da Equipe</span>
+            </div>
+            <div class="card-body">
+                <div class="staff-grid">
+                    <div th:each="m : ${staff}" class="staff-card">
+                        <div class="staff-avatar"
+                             th:text="${#strings.toUpperCase(#strings.substring(m.nome, 0, 2))}">
+                            AB
+                        </div>
+                        <div>
+                            <div class="staff-name" th:text="${m.nome}">Nome</div>
+                            <div class="staff-role" th:text="${m.cargo}">Cargo</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /.content -->
+</div><!-- /.main -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/team.js}" src="../static/js/team.js"></script>
+</body>
+</html>
