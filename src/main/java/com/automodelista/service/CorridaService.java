@@ -43,6 +43,7 @@ public class CorridaService {
         participacaoDAO.inserir(new ParticipacaoCorrida(pilotoId, corridaId, tipoEstrategia, compound));
     }
 
+    //Inicia uma corrida:
     public void iniciarCorrida(int corridaId) {
         Corrida corrida = corridaDAO.obterPorId(corridaId);
         //TODO: Why??

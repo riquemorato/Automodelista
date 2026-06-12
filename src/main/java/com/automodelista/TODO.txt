@@ -1,0 +1,12 @@
+- Quem calcula a pontuação do piloto e gera a classificação do campeonato?
+- Responsabilidade por iniciar uma corrida? CorridaService cria uma nova instancia?
+- Camada de Simulação da corrida:
+    -contem:
+        CorridaDAO
+        ParticipacaoDAO
+        PilotoDAO
+        CarroDAO
+
+    O que é simular a corrida?
+    - cada participante tem seu score de habilidade, estratégia de corrida, e uma chance de dar DNF
+    - 
