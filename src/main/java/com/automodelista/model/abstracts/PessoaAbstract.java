@@ -1,5 +1,5 @@
 
-package com.automodelista.abstracts;
+package com.automodelista.model.abstracts;
 
 /**
  *

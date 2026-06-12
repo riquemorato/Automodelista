@@ -17,10 +17,10 @@ public enum CompostoPneu {
     //Estrutura Enumeradores >> TIPO_PNEU(perfBase, degVolta, durTotal, desc)
     MACIO(100, 0.85, 15, "Macio"), MEDIO(80,  0.55, 28, "Médio"), DURO(60,   0.30, 45, "Duro");
 
-    private int performanceBase;
-    private double degradacaoPorVolta;
-    private int duracaoIdeal;
-    private String descricao;
+    private final int performanceBase;
+    private final double degradacaoPorVolta;
+    private final int duracaoIdeal;
+    private final String descricao;
 
     CompostoPneu(int performanceBase, double degradacao, int duracao, String descricao) {
         this.performanceBase = performanceBase;
