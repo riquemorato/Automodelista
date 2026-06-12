@@ -6,7 +6,6 @@
 package com.automodelista.dao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +37,7 @@ public class ParticipacaoCorridaDAO {
             participacao.getPilotoId(),
             participacao.getCorridaId(),
             participacao.getTipoEstrategia(),
-            participacao.getCompostoPneu()
+            participacao.getCompoundPneu()
         );
     }
 
@@ -52,23 +51,26 @@ public class ParticipacaoCorridaDAO {
     }
 
     public List<ParticipacaoCorrida> obterPorCorrida(int corridaId) {
-        List<ParticipacaoCorrida> lista = new ArrayList<>();
-        for (Map<String,Object> resultado : jdbcTemplate.queryForList("SELECT * FROM participacao WHERE corrida_id=? ORDER BY posicao_final", corridaId)) {
-            lista.add(ParticipacaoCorrida.converterRegistros((HashMap<String,Object>) resultado));
+        List<Map<String,Object>> listaRegistros = jdbcTemplate.queryForList("SELECT * FROM participacao WHERE corrida_id=? ORDER BY posicao_final", corridaId);
+        
+        ArrayList<ParticipacaoCorrida> lista = new ArrayList<>();
+        
+        for (Map<String,Object> registro : listaRegistros) {
+            lista.add(ParticipacaoCorrida.converterRegistros(registro));  // sem cast
         }
-            
+    
         return lista;
     }
 
         // obterPorId — padrão idêntico ao obterCliente()
     public ParticipacaoCorrida obterPorId(int id) {
-        String sql = "SELECT * FROM equipe WHERE id=?";
+        String sql = "SELECT * FROM participacao WHERE id=?";
         return ParticipacaoCorrida.converterRegistros(jdbcTemplate.queryForMap(sql, id));
     }
 
     // obterTodos — padrão idêntico ao obterTodosClientes()
     public List<ParticipacaoCorrida> obterTodos() {
-        String sql = "SELECT * FROM equipe ORDER BY nome";
+        String sql = "SELECT * FROM participacao ORDER BY nome";
 
         List<Map<String,Object>> listaRegistros = jdbcTemplate.queryForList(sql);
 
@@ -81,6 +83,6 @@ public class ParticipacaoCorridaDAO {
     }    
 
     public void deletar(int id) {
-        jdbcTemplate.update("DELETE FROM equipe WHERE id=?", id);
+        jdbcTemplate.update("DELETE FROM participacao WHERE id=?", id);
     }
 }

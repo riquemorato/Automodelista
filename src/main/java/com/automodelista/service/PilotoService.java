@@ -5,6 +5,7 @@
 
 package com.automodelista.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.automodelista.dao.PilotoDAO;
 import com.automodelista.model.Piloto;
+import com.automodelista.model.PosicaoCampeonatoRecord;
 
 /**
  *
@@ -52,6 +54,20 @@ public class PilotoService {
     //DELETE - deleta um piloto via ID
     public void deletar(int id){
         pilotoDAO.deletar(id);
+    }
+
+    //OBTEM POSICAO NO CAMPEONATO
+        public List<PosicaoCampeonatoRecord> gapParaLider() {
+        List<Piloto> pilotos = pilotoDAO.obterTodos();
+        int liderPts = pilotos.isEmpty() ? 0 : pilotos.get(0).getPontosCampeonato();
+        List<PosicaoCampeonatoRecord> standings = new ArrayList<>();
+        for (int i = 0; i < pilotos.size(); i++) {
+            Piloto p = pilotos.get(i);
+            standings.add(new PosicaoCampeonatoRecord(
+                i + 1, p.getNome(), "—",
+                p.getPontosCampeonato(), liderPts - p.getPontosCampeonato()));
+        }
+        return standings;
     }
 
 }

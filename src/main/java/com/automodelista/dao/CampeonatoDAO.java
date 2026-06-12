@@ -43,13 +43,13 @@ public class CampeonatoDAO {
 
     // obterPorId — padrão idêntico ao obterCliente()
     public Campeonato obterPorId(int id) {
-        String sql = "SELECT * FROM equipe WHERE id=?";
+        String sql = "SELECT * FROM campeonato WHERE id=?";
         return Campeonato.converterRegistros(jdbcTemplate.queryForMap(sql, id));
     }
 
     // obterTodos — padrão idêntico ao obterTodosClientes()
     public List<Campeonato> obterTodos() {
-        String sql = "SELECT * FROM equipe ORDER BY nome";
+        String sql = "SELECT * FROM campeonato ORDER BY nome";
 
         List<Map<String,Object>> listaRegistros = jdbcTemplate.queryForList(sql);
 
@@ -62,6 +62,6 @@ public class CampeonatoDAO {
     }
 
     public void deletar(int id) {
-        jdbcTemplate.update("DELETE FROM equipe WHERE id=?", id);
+        jdbcTemplate.update("DELETE FROM campeonato WHERE id=?", id);
     }
 }

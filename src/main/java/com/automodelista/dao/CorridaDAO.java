@@ -6,7 +6,6 @@
 package com.automodelista.dao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,13 +51,13 @@ public class CorridaDAO {
 
     // obterPorId — padrão idêntico ao obterCliente()
     public Corrida obterPorId(int id) {
-        String sql = "SELECT * FROM equipe WHERE id=?";
+        String sql = "SELECT * FROM corrida WHERE id=?";
         return Corrida.converterRegistros(jdbcTemplate.queryForMap(sql, id));
     }
 
     // obterTodos — padrão idêntico ao obterTodosClientes()
     public List<Corrida> obterTodos() {
-        String sql = "SELECT * FROM equipe ORDER BY nome";
+        String sql = "SELECT * FROM corrida ORDER BY nome";
 
         List<Map<String,Object>> listaRegistros = jdbcTemplate.queryForList(sql);
 
@@ -72,13 +71,14 @@ public class CorridaDAO {
 
     public List<Corrida> obterPorCampeonato(int campeonatoId) {
         List<Corrida> lista = new ArrayList<>();
-        for (Map<String,Object> resultado : jdbcTemplate.queryForList(
-                "SELECT * FROM corrida WHERE campeonato_id=? ORDER BY rodada", campeonatoId))
-            lista.add(Corrida.converterRegistros((HashMap<String,Object>) resultado));
+        for (Map<String,Object> registro : jdbcTemplate.queryForList(
+            "SELECT * FROM corrida WHERE campeonato_id=? ORDER BY rodada", campeonatoId)) {
+        lista.add(Corrida.converterRegistros(registro));  
+        }
         return lista;
     }
 
     public void deletar(int id) {
-        jdbcTemplate.update("DELETE FROM equipe WHERE id=?", id);
+        jdbcTemplate.update("DELETE FROM corrida WHERE id=?", id);
     }
 }

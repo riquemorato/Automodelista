@@ -4,7 +4,7 @@
  */
 
 package com.automodelista.model;
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -69,7 +69,7 @@ public class ParticipacaoCorrida {
         return tipoEstrategia;
     }
 
-    public String getCompostoPneu(){
+    public String getCompoundPneu(){
         return compostoPneu;
     }
 
@@ -106,7 +106,7 @@ public class ParticipacaoCorrida {
         this.tipoEstrategia = tipoEstrategia; 
     }
 
-    public void setCompostoPneu(String compostoPneu){
+    public void setCompoundPneu(String compostoPneu){
         this.compostoPneu = compostoPneu;
     }
 

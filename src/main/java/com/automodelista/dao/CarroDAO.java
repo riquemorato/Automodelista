@@ -6,7 +6,6 @@
 package com.automodelista.dao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,24 +56,24 @@ public class CarroDAO {
         );
     }
 
-    //TODO: Corrigir esse bug - o que é?
+    //DONE
     public Carro obterPorEquipe(int equipeId) {
-        List<Map<String,Object>> lista = jdbcTemplate.queryForList("SELECT * FROM carro WHERE equipe_id=? LIMIT 1", equipeId);
-        if (lista.isEmpty()) {
+        List<Map<String,Object>> listaRegistros = jdbcTemplate.queryForList( "SELECT * FROM carro WHERE equipe_id=? LIMIT 1", equipeId);
+        if (listaRegistros.isEmpty()) {
             return null;
         } 
-        return Carro.converterRegistros((HashMap<String,Object>) lista.get(0));
+        return Carro.converterRegistros(listaRegistros.get(0));  // sem cast
     }
 
     // obterPorId — padrão idêntico ao obterCliente()
     public Carro obterPorId(int id) {
-        String sql = "SELECT * FROM equipe WHERE id=?";
+        String sql = "SELECT * FROM carro WHERE id=?";
         return Carro.converterRegistros(jdbcTemplate.queryForMap(sql, id));
     }
 
     // obterTodos — padrão idêntico ao obterTodosClientes()
     public List<Carro> obterTodos() {
-        String sql = "SELECT * FROM equipe ORDER BY nome";
+        String sql = "SELECT * FROM carro ORDER BY nome";
 
         List<Map<String,Object>> listaRegistros = jdbcTemplate.queryForList(sql);
 
@@ -87,6 +86,6 @@ public class CarroDAO {
     }
 
     public void deletar(int id) {
-        jdbcTemplate.update("DELETE FROM equipe WHERE id=?", id);
+        jdbcTemplate.update("DELETE FROM carro WHERE id=?", id);
     }
 }

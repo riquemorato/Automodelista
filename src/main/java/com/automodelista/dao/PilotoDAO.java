@@ -70,13 +70,13 @@ public class PilotoDAO {
 
     // obterPorId — padrão idêntico ao obterCliente()
     public Piloto obterPorId(int id) {
-        String sql = "SELECT * FROM equipe WHERE id=?";
+        String sql = "SELECT * FROM piloto WHERE id=?";
         return Piloto.converterRegistros(jdbcTemplate.queryForMap(sql, id));
     }
 
     // obterTodos — padrão idêntico ao obterTodosClientes()
     public List<Piloto> obterTodos() {
-        String sql = "SELECT * FROM equipe ORDER BY nome";
+        String sql = "SELECT * FROM piloto ORDER BY nome";
 
         List<Map<String,Object>> listaRegistros = jdbcTemplate.queryForList(sql);
 
