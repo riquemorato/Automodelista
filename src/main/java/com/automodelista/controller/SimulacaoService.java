@@ -60,7 +60,7 @@ import com.automodelista.model.enums.StatusCorrida;
 public class SimulacaoService {
 
     @Autowired CorridaDAO corridaDAO;
-    @Autowired ParticipacaoCorridaDAO participacaoDAO;
+    @Autowired ParticipacaoCorridaDAO participacaoCorridaDAO;
     @Autowired PilotoDAO pilotoDAO;
     @Autowired CarroDAO carroDAO;
 
@@ -71,23 +71,12 @@ public class SimulacaoService {
 
     //Método Orchestrador
     public List<ResultadoCorridaRecord> simularCorrida(int corridaId, int equipeId) {
-        validarCorridaNaoFinalizada(corridaId);
-
-        List<ParticipacaoCorrida> participantes = carregarParticipantesComPiloto(corridaId);
-        Carro carro = carregarCarroDaEquipe(equipeId);
-
-        List<Ficha> fichas = calcularFichas(participantes, carro);
-        ordenarPorDesempenho(fichas);
-
-        List<ResultadoCorridaRecord> resultados = montarResultados(fichas);
-        salvarResultados(resultados, fichas);
-
-        corridaDAO.atualizarStatus(corridaId, StatusCorrida.FINALIZADA.name());
-        return resultados;
+        //TODO: Implementar chamada dos métodos
     }
 
     // Validação - Simulação da corrida => Não pode ter sido finalizada ou simulada
     private void validarCorrida(int corridaId) {
+        
         Corrida corrida = corridaDAO.obterPorId(corridaId);
         
         //TODO: Corrigir esse problema
@@ -98,12 +87,30 @@ public class SimulacaoService {
 
     // Listar pilotos cadastrados na corrida
     private List<ParticipacaoCorrida> listarPilotosParticipantes(int corridaId) {
-        List<ParticipacaoCorrida> participacoes = participacaoDAO.obterPorCorrida(corridaId);
-        if (participacoes.isEmpty())
-            throw new IllegalStateException("Nenhum piloto inscrito nesta corrida.");
+        
+        List<ParticipacaoCorrida> participantesCorrida = participacaoCorridaDAO.obterPorCorrida(corridaId);
 
-        for (ParticipacaoCorrida pilotoParticipante : participacoes) {
+        //A corrida só poderá ser valida se houver pelo menos um piloto participante (List participantes não pode estar vazia)
+        if (participantesCorrida.isEmpty()){
+            throw new IllegalStateException("Nenhum piloto inscrito nesta corrida.");
+        }
+            
+
+        for (ParticipacaoCorrida pilotoParticipante : participantesCorrida) {
             pilotoParticipante.setPiloto(pilotoDAO.obterPorId(pilotoParticipante.getPilotoId()));
         }
-        return participacoes;
+
+        return participantesCorrida;
+    }
+
+    // Carregar o carro da equipe que será simulada
+    private Carro carroDaEquipeLoader(int equipeId){
+        Carro carro = carroDAO.obterPorEquipe(equipeId);
+        
+        //Se a equipe não tiver um carro, throws exception
+        if(carro == null){
+             throw new IllegalStateException("Equipe não possui carro cadastrado.");
+        }
+
+        return carro;
     }
