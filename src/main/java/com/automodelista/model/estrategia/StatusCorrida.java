@@ -14,7 +14,7 @@ public enum StatusCorrida {
     EM_ANDAMENTO("Em andamento"),
     FINALIZADA("Finalizada");
 
-    private String descricao;
+    private final String descricao;
 
     //Pega a string relacionada com cada ENUM
     StatusCorrida(String descricao){
