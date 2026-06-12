@@ -9,6 +9,7 @@ package com.automodelista.model.enums;
  *
  * @author Henrique
  */
+
 public enum StatusCorrida {
     PENDENTE("Pendente"),
     EM_ANDAMENTO("Em andamento"),

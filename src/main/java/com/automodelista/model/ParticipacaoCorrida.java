@@ -33,7 +33,7 @@ public class ParticipacaoCorrida {
     }
 
     //Constructor para select
-    public ParticipacaoCorrida(int id, int pilotoId, int corridaId, int posicaoFinal, int pontosObtidos, String tipoEstrategia, String compostoPneu, boolean abandonou, Piloto piloto) {
+    public ParticipacaoCorrida(int id, int pilotoId, int corridaId, int posicaoFinal, int pontosObtidos, String tipoEstrategia, String compostoPneu, boolean abandonou) {
         this.id = id; 
         this.pilotoId = pilotoId;
         this.corridaId = corridaId;
@@ -42,7 +42,7 @@ public class ParticipacaoCorrida {
         this.tipoEstrategia = tipoEstrategia;
         this.compostoPneu = compostoPneu;
         this.abandonou = abandonou;
-        this.piloto = piloto;
+
     }
 
     //Getters
@@ -120,18 +120,16 @@ public class ParticipacaoCorrida {
     }
     
     public static ParticipacaoCorrida converterRegistros(HashMap<String, Object> registros) {
+        int idParticipacao = (int) registros.get("id");
+        int idPiloto = (int) registros.get("piloto_id");
+        int idCorrida = (int) registros.get("corrida_id");
+        int posicaoFinal = registros.get("posicao_final")  != null ? (int) registros.get("posicao_final")  : 0;
+        int pontosObtidos = registros.get("pontos_obtidos") != null ? (int) registros.get("pontos_obtidos") : 0;
+        String tipoEstrategia = (String) registros.get("tipo_estrategia");
+        String compoundPneu = (String) registros.get("compound_pneu");
+        boolean abandonou = registros.get("abandonou") != null && (boolean) registros.get("abandonou");
 
-        int IdParticipacao = (int) registros.get("id");
-        int IdPiloto = (int) registros.get("pilotoId");
-        int IdCorrida = (int) registros.get("corridaId");
-        int PosicaoFinal = (int) registros.get("posicaoFinal");
-        int PontosObtidos = (int) registros.get("pontosObtidos");
-        String TipoEstrategia = (String) registros.get("tipoEstrategia");
-        String CompostoPneu = (String) registros.get("compostoPneu");
-        boolean Abandonou = (boolean) registros.get("abandonou");
-        Piloto Piloto = (Piloto) registros.get("piloto");
-
-        return new ParticipacaoCorrida(IdParticipacao, IdPiloto, IdCorrida, PosicaoFinal, PontosObtidos, TipoEstrategia, CompostoPneu, Abandonou, Piloto); //Tomar cuidado com a ordem.
-
-    }
+    return new ParticipacaoCorrida(idParticipacao, idPiloto, idCorrida, posicaoFinal, pontosObtidos, tipoEstrategia, compoundPneu, abandonou);
+    // Sem o Piloto aqui — ele é setado depois via setPiloto()
+    }   
 }
