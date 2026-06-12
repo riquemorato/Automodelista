@@ -101,7 +101,7 @@ public class Corrida {
         String Circuito = (String) registros.get("circuito");
         int Rodada = (int) registros.get("rodada");
         StatusCorrida Status = StatusCorrida.valueOf((String) registros.get("status"));
-        int CampeonatoId = (int) registros.get("campeonato_Id");
+        int CampeonatoId = (int) registros.get("campeonato_id");
 
         return new Corrida(IdCorrida, Nome, Circuito, Rodada, Status, CampeonatoId); //Tomar cuidado com a ordem.
 

@@ -74,11 +74,11 @@ public class Equipe {
 
     //Conversao de registros
     public static Equipe converterRegistros(HashMap<String, Object> registros) {
-
-        int IdEquipe = (int) registros.get("id");
-        String Nome = (String) registros.get("nome");
-        double Orcamento = (double) registros.get("orcamento");
-
-        return new Equipe(IdEquipe, Nome, Orcamento); //Tomar cuidado com a ordem.
+        int idEquipe = (int) registros.get("id");
+        String nome = (String) registros.get("nome");
+    
+    //MELHORIA: No DB, o orçamento utiliza NUMERIC/DECIMAL. É melhor fazer um cast utilizando (NUMBER) para precisão de valor.
+        double orcamento = ((Number) registros.get("orcamento")).doubleValue();
+        return new Equipe(idEquipe, nome, orcamento);
     }
 }
