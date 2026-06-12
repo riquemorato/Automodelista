@@ -20,6 +20,7 @@ import com.automodelista.dao.ParticipacaoCorridaDAO;
 import com.automodelista.dao.PilotoDAO;
 import com.automodelista.model.Carro;
 import com.automodelista.model.Corrida;
+import com.automodelista.model.FatorSimulacao;
 import com.automodelista.model.ParticipacaoCorrida;
 import com.automodelista.model.ResultadoCorridaRecord;
 import com.automodelista.model.abstracts.EstrategiaAbstract;
@@ -68,7 +69,7 @@ public class SimulacaoService {
 
     // record temporário com os dados de desempenho de cada piloto antes de definir a ordem final da corrida
     // Por que record? uma vez sorteado, não é possível mudar a sorte do piloto
-    private record DadosDesempenho(ParticipacaoCorrida participacao, ScoreSimulacao score, boolean abandonou) {}
+    private record DadosDesempenho(ParticipacaoCorrida participacao, FatorSimulacao fatorDesempenho, boolean abandonou) {}
 
     //Método Orchestrador
     public List<ResultadoCorridaRecord> simularCorrida(int corridaId, int equipeId) {
@@ -123,8 +124,18 @@ public class SimulacaoService {
         //para cada piloto participante na lista, obtem-se a estratégia que será utilizada, o score total de simulacao e se ele sofrerá DNF ou não
         for(ParticipacaoCorrida participante : participantesCorrida) {
             EstrategiaAbstract estrategia = EstrategiaAbstract.criar(participante.getTipoEstrategia());
-            FatorSimulacao score = FatorSimulacao.calcular(participante.getPiloto(), carro, estrategia)
+            FatorSimulacao fatorDesempenho = FatorSimulacao.calcular(participante.getPiloto(), carro, estrategia);
+
+            boolean isDnf = randomDNF(estrategia);
+            desempenhoPilotos.add(new DadosDesempenho(participante,  fatorDesempenho, isDnf));
         }
     }
+
+    //Método para calcular a chance de DNF do piloto, utilizando em CalcularDesempenho
+    private boolean randomDNF(EstrategiaAbstract estrategia) {
+        double riscoBase = 0.05;
+        return Math.random() < riscoBase * estrategia.getMultiplicadorRisco();
+    }
+
 
 }
