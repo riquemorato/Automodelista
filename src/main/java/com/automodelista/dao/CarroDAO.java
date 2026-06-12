@@ -70,7 +70,7 @@ public class CarroDAO {
             (HashMap<String,Object>) jdbcTemplate.queryForMap("SELECT * FROM carro WHERE id=?", id));
     }
 
-        public void deletar(int id) {
+    public void deletar(int id) {
         jdbcTemplate.update("DELETE FROM equipe WHERE id=?", id);
     }
 }
