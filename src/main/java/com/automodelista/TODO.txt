@@ -27,3 +27,5 @@ Implementar Controllers: Usar boilerplate ClienteController/MainController
 - EquipeController
 - IndexController
 - PilotoController
+
+CorrigirProblema em SimulacaoService (ln 90)
