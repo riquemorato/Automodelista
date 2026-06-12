@@ -16,6 +16,7 @@ public class Carro {
     private int id;
     private String nome;
     private int equipeId;
+    
     //Inicializados com valor default = 1. Esse valor muda de acordo com orçamento da equipe e o calculo da performance
     private int nivelMotor = 1;
     private int nivelAero = 1;
