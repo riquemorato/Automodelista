@@ -97,12 +97,13 @@ public class Corrida {
     public static Equipe converterRegistros(HashMap<String, Object> registros) {
         int IdCorrida = (int) registros.get("id");
         String Nome = (String) registros.get("nome");
+        String Circuito = (String) registros.get("circuito");
         int Rodada = (int) registros.get("rodada");
         StatusCorrida StatusCorrida = (StatusCorrida) registros.get("status");
         int CampeonatoId = (int) registros.get("campeonatoId");
 
 
-        return new Corrida(IdEquipe, Nome, Orcamento); //Tomar cuidado com a ordem.
+        return new Corrida(IdCorrida, Nome, Circuito, Rodada, StatusCorrida, CampeonatoId); //Tomar cuidado com a ordem.
 
     }
 
