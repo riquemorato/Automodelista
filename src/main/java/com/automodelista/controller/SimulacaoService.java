@@ -65,7 +65,7 @@ public class SimulacaoService {
     @Autowired PilotoDAO pilotoDAO;
     @Autowired CarroDAO carroDAO;
 
-    private static final int[] TABELA_PONTOS = {25, 18, 15, 12, 10, 8, 6, 4, 2, 1};
+    private static final int[] PONTOS = {25, 18, 15, 12, 10, 8, 6, 4, 2, 1};
 
     // record temporário com os dados de desempenho de cada piloto antes de definir a ordem final da corrida
     // Por que record? uma vez sorteado, não é possível mudar a sorte do piloto
@@ -75,6 +75,8 @@ public class SimulacaoService {
     public List<ResultadoCorridaRecord> simularCorrida(int corridaId, int equipeId) {
         //TODO: Implementar chamada dos métodos
     }
+
+    //MÉTODOS AUXILIARES PARA SIMULAR A CORRIDA.
 
     // Validação - Simulação da corrida => Não pode ter sido finalizada ou simulada
     private void validarCorrida(int corridaId) {
@@ -137,5 +139,61 @@ public class SimulacaoService {
         return Math.random() < riscoBase * estrategia.getMultiplicadorRisco();
     }
 
+    private List<DadosDesempenho> ordenarPorDesempenho(List<DadosDesempenho> dadosDesempenhoGeral) {
+        //Separa os pilotos por desempenho em duas listas: os que terminaram e os que não terminaram (DNF)
+        //Os que terminaram tem seu fatorDesempenho calculado, para determinar a ordem de melhor performance -> pior performance (sem DNF)
+        List<DadosDesempenho> terminaramCorrida  = new ArrayList<>();
+        List<DadosDesempenho> abandonaramCorrida = new ArrayList<>();
+
+        for (DadosDesempenho dadosPiloto : dadosDesempenhoGeral) {
+            if (dadosPiloto.abandonou()){
+                abandonaramCorrida.add(dadosPiloto);
+            }
+            else {
+                terminaramCorrida.add(dadosPiloto);
+            }               
+        }
+
+        // Só uma regra de comparação: maior score primeiro
+        // DNF: os que abandoraram a corrida não precisam ser comparados
+        terminaramCorrida.sort((a, b) -> b.fatorDesempenho().total() - a.fatorDesempenho().total());
+
+        // Merge de listas ordenando por fator de desempenho.
+        List<DadosDesempenho> resultado = new ArrayList<>();
+        resultado.addAll(terminaramCorrida);
+        resultado.addAll(abandonaramCorrida);
+        
+        return resultado;
+    }
+
+    //Gera o resultado final da corrida como Record
+     private List<ResultadoCorridaRecord> calcularResultado(List<DadosDesempenho> dadosDesempenhoPiloto) {
+
+        //Lista os resultados dos pilotos
+        List<ResultadoCorridaRecord> resultados = new ArrayList<>();
+
+        //Para cada piloto, pega os dados de desempenho ordenados e calcula sua posição na classificacao final e sua pontuacao
+        for (int i = 0; i < dadosDesempenhoPiloto.size(); i++) {
+            DadosDesempenho dadosDesempenhoIndividual = dadosDesempenhoPiloto.get(i);
+            int posicao = i + 1;
+            int pontos  = calcularPontos(posicao, dadosDesempenhoIndividual.abandonou());
+
+            //adiciona os resultados do piloto na lista para o Record.
+            resultados.add(new ResultadoCorridaRecord(
+                dadosDesempenhoIndividual.participacao().getPiloto(),
+                dadosDesempenhoIndividual.fatorDesempenho().total(),
+                dadosDesempenhoIndividual.abandonou(),
+                posicao,
+                pontos
+            ));
+        }
+        return resultados;
+    }
+
+    //Calcula a pontuação utilizando o array PONTOS. cada posicao tem sua pontuação especifica, do primeiro ao décimo colocado. Utilizado em calcularResultado
+    private int calcularPontos(int posicao, boolean abandonou) {
+        if (abandonou || posicao > PONTOS.length) return 0;
+        return PONTOS[posicao - 1];
+    }
 
 }
