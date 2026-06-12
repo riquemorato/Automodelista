@@ -45,8 +45,10 @@ public class CorridaService {
 
     public void iniciarCorrida(int corridaId) {
         Corrida corrida = corridaDAO.obterPorId(corridaId);
-        if (corrida.getStatus() != StatusCorrida.PENDENTE)
+        //TODO: Why??
+        if (corrida.getStatus() != StatusCorrida.PENDENTE){
             throw new IllegalStateException("Corrida já foi iniciada ou encerrada.");
+        }  
         corridaDAO.atualizarStatus(corridaId, StatusCorrida.EM_ANDAMENTO.name());
     }
 }
