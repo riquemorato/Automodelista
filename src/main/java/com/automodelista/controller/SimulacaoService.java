@@ -8,7 +8,6 @@ package com.automodelista.controller;
 //COMO FUNCIONA A SIMULAÇÃO: 
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +82,7 @@ public class SimulacaoService {
         List<DadosDesempenho> listaDesempenho = calcularDesempenho(participantes, carro);
         ordenarPorDesempenho(listaDesempenho);
 
-        List<ResultadoCorridaRecord> resultados = montarResultados(listaDesempenho);
+        List<ResultadoCorridaRecord> resultados = calcularResultado(listaDesempenho);
         salvarResultados(resultados, listaDesempenho);
 
         corridaDAO.atualizarStatus(corridaId, StatusCorrida.FINALIZADA.name());
@@ -145,6 +144,8 @@ public class SimulacaoService {
             boolean isDnf = randomDNF(estrategia);
             desempenhoPilotos.add(new DadosDesempenho(participante,  fatorDesempenho, isDnf));
         }
+
+        return desempenhoPilotos;
     }
 
     //Método para calcular a chance de DNF do piloto, utilizando em CalcularDesempenho
