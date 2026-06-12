@@ -22,9 +22,11 @@ import com.automodelista.model.Equipe;
 
 @Service
 public class EquipeService {
+
     @Autowired EquipeDAO equipeDAO;
     @Autowired CarroDAO  carroDAO;
 
+    //POST - Insere uma nova equipe
     public void inserir(Equipe equipe){
         int id = equipeDAO.inserir(equipe);
         
@@ -32,17 +34,22 @@ public class EquipeService {
         carroDAO.inserir(carro);
     }
 
+    //GET - Obtem uma equipe por ID
     public Equipe obterPorId(int id){
         return equipeDAO.obterPorId(id);
     }
 
+    //GET - Obtem todas as equipes cadastradas
     public List<Equipe> obterTodas(){
         return equipeDAO.obterTodos();
     }
 
+    //UPDATE - atualiza uma equipe por ID
     public void atualizar(int id, Equipe e){
         equipeDAO.atualizar(id, e);
     }
+
+    //DELETE - Deleta uma equipe por ID
     public void deletar(int id){
         equipeDAO.deletar(id);
     }
