@@ -5,6 +5,8 @@
 
 package com.automodelista.model;
 
+import java.util.HashMap;
+
 import com.bd.aulabd.model.enums.StatusCorrida;
 
 /**
@@ -81,4 +83,18 @@ public class Corrida {
     public void setCampeonatoId(int campeonatoId){
         this.campeonatoId = campeonatoId;
     }
+
+    //Conversao de registros
+    public static Equipe converterRegistros(HashMap<String, Object> registros) {
+        int IdCorrida = (int) registros.get("id");
+        String Nome = (String) registros.get("nome");
+        int Rodada = (int) registros.get("rodada");
+        StatusCorrida StatusCorrida = (StatusCorrida) registros.get("status");
+        int CampeonatoId = (int) registros.get("campeonatoId");
+
+
+        return new Corrida(IdEquipe, Nome, Orcamento); //Tomar cuidado com a ordem.
+
+    }
+
 }
