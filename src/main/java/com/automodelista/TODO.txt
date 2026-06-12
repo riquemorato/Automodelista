@@ -8,5 +8,14 @@
         CarroDAO
 
     O que é simular a corrida?
+    - Atualizar o "StatusCorrida" para EM_ANDAMENTO
     - cada participante tem seu score de habilidade, estratégia de corrida, e uma chance de dar DNF
-    - 
+    - No fim da corrida, ordenar por ordem de chegada, considerando o score e o dnf - Se tiver DNF, vai pro final da lista
+
+    - Gerar um ArrayList com o resultado da corrida para transformar em um record:
+    Objeto do arraylist > 
+    - encerrar a corrida e atualizar o StatusCorrida para FINALIZADA
+
+Camada de simulacao -> SimulacaoService
+Cadastro de usuário + tela de login
+Corrigir CorridaService
