@@ -5,7 +5,7 @@
 
 package com.automodelista.model;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import com.automodelista.model.abstracts.PessoaAbstract;
 
@@ -33,12 +33,12 @@ public class Piloto extends PessoaAbstract {
 
     //construtor para Select
     public Piloto(int id, String nome, String nacionalidade, int idade, int numeroCarro, int habilidade, int consistencia, int pontosCampeonato, int equipeId) {
-    super(id, nome, nacionalidade, idade);
-    this.numeroCarro = numeroCarro;
-    this.habilidade = habilidade;
-    this.consistencia = consistencia;
-    this.pontosCampeonato = pontosCampeonato;
-    this.equipeId = equipeId;
+        super(id, nome, nacionalidade, idade);
+        this.numeroCarro = numeroCarro;
+        this.habilidade = habilidade;
+        this.consistencia = consistencia;
+        this.pontosCampeonato = pontosCampeonato;
+        this.equipeId = equipeId;
     }
 
     //Getters
@@ -90,18 +90,18 @@ public class Piloto extends PessoaAbstract {
     } 
 
     //Conversão de Registro - ref classe Cliente
-    public static Piloto converterRegistros(HashMap<String, Object> registros) {
-        int idPiloto = (int) registros.get("id");
-        String nome = (String) registros.get("nome");
+    public static Piloto converterRegistros(Map<String, Object> registros) {
+        int idPiloto         = (int) registros.get("id");
+        String nome          = (String) registros.get("nome");
         String nacionalidade = (String) registros.get("nacionalidade");
-        int idade = (int) registros.get("idade");
-        int numeroCarro = (int) registros.get("numero_carro");
-        int habilidade = (int) registros.get("habilidade");
-        int consistencia = (int) registros.get("consistencia");
-        int pontosCampeonato = (int) registros.get("pontos_campeonato");
-        int idEquipe = (int) registros.get("equipe_id");
+        int idade            = (int) registros.get("idade");
+        int numeroCarro      = (int) registros.get("numero_carro");
+        int habilidade       = (int) registros.get("habilidade");
+        int consistencia     = (int) registros.get("consistencia");
+        int pontosCampeonato = registros.get("pontos_campeonato") != null ? (int) registros.get("pontos_campeonato") : 0;
+        int idEquipe         = registros.get("equipe_id") != null ? (int) registros.get("equipe_id") : 0;
 
-        return new Piloto(idPiloto, nome, nacionalidade, idade, numeroCarro, habilidade, consistencia, pontosCampeonato, idEquipe);
+    return new Piloto(idPiloto, nome, nacionalidade, idade, numeroCarro, habilidade, consistencia, pontosCampeonato, idEquipe);
     }
 
     //Calculo de score de Habilidade

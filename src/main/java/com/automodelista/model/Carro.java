@@ -5,7 +5,7 @@
 
 package com.automodelista.model;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -33,7 +33,7 @@ public class Carro {
     }
 
     //Construtor para Select
-    public Carro(int id, String nome, int equipeId, int nivelMotor, int nivelAero, int nivelTransmissao, int nivelSuspensao){
+    public Carro(int id, String nome, int equipeId, int nivelMotor, int nivelAero, int nivelTransmissao, int nivelSuspensao) {
         this.id = id;
         this.nome = nome;
         this.equipeId = equipeId;
@@ -42,7 +42,6 @@ public class Carro {
         this.nivelTransmissao = nivelTransmissao;
         this.nivelSuspensao = nivelSuspensao;
     }
-
     //Getters
     public int getId(){
         return id;
@@ -103,16 +102,16 @@ public class Carro {
         return (nivelMotor * 40) + (nivelAero * 30) + (nivelTransmissao * 20) + (nivelSuspensao * 10);
     }
 
-    public static Carro converterRegistros(HashMap<String, Object> registros) {
-        int idCarro = (int) registros.get("id");
-        String nome = (String) registros.get("nome");
-        int idEquipe = (int) registros.get("equipe_id");
-        int nivelMotor = (int) registros.get("nivel_motor");
-        int nivelAero = (int) registros.get("nivel_aero");
+    public static Carro converterRegistros(Map<String, Object> registros) {
+        int idCarro          = (int) registros.get("id");
+        String nome          = (String) registros.get("nome");
+        int idEquipe         = registros.get("equipe_id") != null ? (int) registros.get("equipe_id") : 0;
+        int nivelMotor       = (int) registros.get("nivel_motor");
+        int nivelAero        = (int) registros.get("nivel_aero");
         int nivelTransmissao = (int) registros.get("nivel_transmissao");
-        int nivelSuspensao = (int) registros.get("nivel_suspensao");
+        int nivelSuspensao   = (int) registros.get("nivel_suspensao");
 
-        return new Carro(idCarro, nome, idEquipe, nivelMotor, nivelAero, nivelTransmissao, nivelSuspensao);
+    return new Carro(idCarro, nome, idEquipe, nivelMotor, nivelAero, nivelTransmissao, nivelSuspensao);
     }
 
 

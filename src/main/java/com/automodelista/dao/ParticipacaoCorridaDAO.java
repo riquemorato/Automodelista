@@ -60,6 +60,26 @@ public class ParticipacaoCorridaDAO {
         return lista;
     }
 
+        // obterPorId — padrão idêntico ao obterCliente()
+    public ParticipacaoCorrida obterPorId(int id) {
+        String sql = "SELECT * FROM equipe WHERE id=?";
+        return ParticipacaoCorrida.converterRegistros(jdbcTemplate.queryForMap(sql, id));
+    }
+
+    // obterTodos — padrão idêntico ao obterTodosClientes()
+    public List<ParticipacaoCorrida> obterTodos() {
+        String sql = "SELECT * FROM equipe ORDER BY nome";
+
+        List<Map<String,Object>> listaRegistros = jdbcTemplate.queryForList(sql);
+
+        ArrayList<ParticipacaoCorrida> arrayListAuxiliar = new ArrayList<>();
+
+        for (Map<String,Object> registro : listaRegistros) {
+            arrayListAuxiliar.add(ParticipacaoCorrida.converterRegistros(registro));
+        }
+        return arrayListAuxiliar;
+    }    
+
     public void deletar(int id) {
         jdbcTemplate.update("DELETE FROM equipe WHERE id=?", id);
     }

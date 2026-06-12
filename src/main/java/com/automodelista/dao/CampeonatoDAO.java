@@ -6,7 +6,6 @@
 package com.automodelista.dao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,18 +41,24 @@ public class CampeonatoDAO {
         );
     }
 
+    // obterPorId — padrão idêntico ao obterCliente()
     public Campeonato obterPorId(int id) {
-        return Campeonato.converterRegistros(
-            (HashMap<String,Object>) jdbcTemplate.queryForMap("SELECT * FROM campeonato WHERE id=?", id));
+        String sql = "SELECT * FROM equipe WHERE id=?";
+        return Campeonato.converterRegistros(jdbcTemplate.queryForMap(sql, id));
     }
 
+    // obterTodos — padrão idêntico ao obterTodosClientes()
     public List<Campeonato> obterTodos() {
-        List<Campeonato> lista = new ArrayList<>();
-        for (Map<String,Object> resultado : jdbcTemplate.queryForList("SELECT * FROM campeonato ORDER BY temporada DESC")){
-            lista.add(Campeonato.converterRegistros((HashMap<String,Object>) resultado));
+        String sql = "SELECT * FROM equipe ORDER BY nome";
+
+        List<Map<String,Object>> listaRegistros = jdbcTemplate.queryForList(sql);
+
+        ArrayList<Campeonato> arrayListAuxiliar = new ArrayList<>();
+
+        for (Map<String,Object> registro : listaRegistros) {
+            arrayListAuxiliar.add(Campeonato.converterRegistros(registro));
         }
-            
-        return lista;
+        return arrayListAuxiliar;
     }
 
     public void deletar(int id) {

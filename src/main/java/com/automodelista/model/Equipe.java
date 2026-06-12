@@ -1,7 +1,7 @@
 
 package com.automodelista.model;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -72,12 +72,10 @@ public class Equipe {
         this.orcamento += valor;
     }
 
-    //Conversao de registros
-    public static Equipe converterRegistros(HashMap<String, Object> registros) {
+    public static Equipe converterRegistros(Map<String, Object> registros) {
         int idEquipe = (int) registros.get("id");
         String nome = (String) registros.get("nome");
-    
-    //MELHORIA: No DB, o orçamento utiliza NUMERIC/DECIMAL. É melhor fazer um cast utilizando (NUMBER) para precisão de valor.
+        //MELHORIA: No DB, o orçamento utiliza NUMERIC/DECIMAL. É melhor fazer um cast utilizando (NUMBER) para precisão de valor.
         double orcamento = ((Number) registros.get("orcamento")).doubleValue();
         return new Equipe(idEquipe, nome, orcamento);
     }

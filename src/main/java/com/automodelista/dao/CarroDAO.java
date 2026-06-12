@@ -5,6 +5,7 @@
 
 package com.automodelista.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,9 +66,24 @@ public class CarroDAO {
         return Carro.converterRegistros((HashMap<String,Object>) lista.get(0));
     }
 
+    // obterPorId — padrão idêntico ao obterCliente()
     public Carro obterPorId(int id) {
-        return Carro.converterRegistros(
-            (HashMap<String,Object>) jdbcTemplate.queryForMap("SELECT * FROM carro WHERE id=?", id));
+        String sql = "SELECT * FROM equipe WHERE id=?";
+        return Carro.converterRegistros(jdbcTemplate.queryForMap(sql, id));
+    }
+
+    // obterTodos — padrão idêntico ao obterTodosClientes()
+    public List<Carro> obterTodos() {
+        String sql = "SELECT * FROM equipe ORDER BY nome";
+
+        List<Map<String,Object>> listaRegistros = jdbcTemplate.queryForList(sql);
+
+        ArrayList<Carro> arrayListAuxiliar = new ArrayList<>();
+
+        for (Map<String,Object> registro : listaRegistros) {
+            arrayListAuxiliar.add(Carro.converterRegistros(registro));
+        }
+        return arrayListAuxiliar;
     }
 
     public void deletar(int id) {

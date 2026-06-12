@@ -5,7 +5,7 @@
 
 package com.automodelista.model;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import com.automodelista.model.enums.StatusCorrida;
 
@@ -94,17 +94,15 @@ public class Corrida {
     }
 
     //Conversao de registros
-    public static Corrida converterRegistros(HashMap<String, Object> registros) {
-        
-        int IdCorrida = (int) registros.get("id");
-        String Nome = (String) registros.get("nome");
-        String Circuito = (String) registros.get("circuito");
-        int Rodada = (int) registros.get("rodada");
-        StatusCorrida Status = StatusCorrida.valueOf((String) registros.get("status"));
-        int CampeonatoId = (int) registros.get("campeonato_id");
+    public static Corrida converterRegistros(Map<String, Object> registros) {
+        int id            = (int) registros.get("id");
+        String nome       = (String) registros.get("nome");
+        String circuito   = (String) registros.get("circuito");
+        int rodada        = (int) registros.get("rodada");
+        StatusCorrida status = StatusCorrida.valueOf((String) registros.get("status"));
+        int campeonatoId  = (int) registros.get("campeonato_id");
 
-        return new Corrida(IdCorrida, Nome, Circuito, Rodada, Status, CampeonatoId); //Tomar cuidado com a ordem.
-
+        return new Corrida(id, nome, circuito, rodada, status, campeonatoId);
     }
 
 }

@@ -68,17 +68,24 @@ public class PilotoDAO {
         jdbcTemplate.update("UPDATE piloto SET pontos_campeonato = pontos_campeonato + ? WHERE id=?", pontos, id);
     }
 
+    // obterPorId — padrão idêntico ao obterCliente()
     public Piloto obterPorId(int id) {
-        return Piloto.converterRegistros((HashMap<String,Object>) jdbcTemplate.queryForMap("SELECT * FROM piloto WHERE id=?", id));
+        String sql = "SELECT * FROM equipe WHERE id=?";
+        return Piloto.converterRegistros(jdbcTemplate.queryForMap(sql, id));
     }
 
+    // obterTodos — padrão idêntico ao obterTodosClientes()
     public List<Piloto> obterTodos() {
-        List<Piloto> lista = new ArrayList<>();
-        for (Map<String,Object> resultado : jdbcTemplate.queryForList("SELECT * FROM piloto ORDER BY pontos_campeonato DESC")) {
-            lista.add(Piloto.converterRegistros((HashMap<String,Object>) resultado));
-        }
+        String sql = "SELECT * FROM equipe ORDER BY nome";
 
-        return lista;
+        List<Map<String,Object>> listaRegistros = jdbcTemplate.queryForList(sql);
+
+        ArrayList<Piloto> arrayListAuxiliar = new ArrayList<>();
+
+        for (Map<String,Object> registro : listaRegistros) {
+            arrayListAuxiliar.add(Piloto.converterRegistros(registro));
+        }
+        return arrayListAuxiliar;
     }
 
     public List<Piloto> obterPorEquipe(int equipeId) {

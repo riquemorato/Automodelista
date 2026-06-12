@@ -50,9 +50,24 @@ public class CorridaDAO {
         jdbcTemplate.update("UPDATE corrida SET status=? WHERE id=?", status, id);
     }
 
+    // obterPorId — padrão idêntico ao obterCliente()
     public Corrida obterPorId(int id) {
-        return Corrida.converterRegistros(
-            (HashMap<String,Object>) jdbcTemplate.queryForMap("SELECT * FROM corrida WHERE id=?", id));
+        String sql = "SELECT * FROM equipe WHERE id=?";
+        return Corrida.converterRegistros(jdbcTemplate.queryForMap(sql, id));
+    }
+
+    // obterTodos — padrão idêntico ao obterTodosClientes()
+    public List<Corrida> obterTodos() {
+        String sql = "SELECT * FROM equipe ORDER BY nome";
+
+        List<Map<String,Object>> listaRegistros = jdbcTemplate.queryForList(sql);
+
+        ArrayList<Corrida> arrayListAuxiliar = new ArrayList<>();
+
+        for (Map<String,Object> registro : listaRegistros) {
+            arrayListAuxiliar.add(Corrida.converterRegistros(registro));
+        }
+        return arrayListAuxiliar;
     }
 
     public List<Corrida> obterPorCampeonato(int campeonatoId) {

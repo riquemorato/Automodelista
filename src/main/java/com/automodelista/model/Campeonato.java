@@ -5,7 +5,7 @@
 
 package com.automodelista.model;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -60,11 +60,10 @@ public class Campeonato {
         this.temporada = temporada;
     }
 
-    public static Campeonato converterRegistros(HashMap<String, Object> registros) {
-        int IdCampeonato = (int) registros.get("id");
-        String Nome = (String) registros.get("nome");
-        int Temporada = (int) registros.get("temporada");
-        
-        return new Campeonato(IdCampeonato, Nome, Temporada);
+    public static Campeonato converterRegistros(Map<String, Object> registros) {
+        int idCampeonato = (int) registros.get("id");
+        String nome      = (String) registros.get("nome");
+        int temporada    = (int) registros.get("temporada");
+        return new Campeonato(idCampeonato, nome, temporada);
     }
 }
