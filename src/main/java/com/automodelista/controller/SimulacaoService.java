@@ -73,7 +73,21 @@ public class SimulacaoService {
 
     //Método Orchestrador
     public List<ResultadoCorridaRecord> simularCorrida(int corridaId, int equipeId) {
-        //TODO: Implementar chamada dos métodos
+        //Chamando os métodos em sequencia:
+        validarCorrida(corridaId);
+
+        List<ParticipacaoCorrida> participantes = listarPilotosParticipantes(corridaId);
+
+        Carro carro = carroDaEquipeLoader(equipeId);
+
+        List<DadosDesempenho> listaDesempenho = calcularDesempenho(participantes, carro);
+        ordenarPorDesempenho(listaDesempenho);
+
+        List<ResultadoCorridaRecord> resultados = montarResultados(listaDesempenho);
+        salvarResultados(resultados, listaDesempenho);
+
+        corridaDAO.atualizarStatus(corridaId, StatusCorrida.FINALIZADA.name());
+        return resultados;
     }
 
     //MÉTODOS AUXILIARES PARA SIMULAR A CORRIDA.
@@ -194,6 +208,31 @@ public class SimulacaoService {
     private int calcularPontos(int posicao, boolean abandonou) {
         if (abandonou || posicao > PONTOS.length) return 0;
         return PONTOS[posicao - 1];
+    }
+
+    //Salva os resultados, posicao, pontuacao e atualiza o campeonato
+    // Passo 7: grava posição, pontos e atualiza o campeonato
+    private void salvarResultados(List<ResultadoCorridaRecord> resultados, List<DadosDesempenho> fichas) {
+        
+        //Para cada resultado armazenado na lista recebida
+        for (int i = 0; i < resultados.size(); i++) {
+
+            ResultadoCorridaRecord resultado = resultados.get(i);
+            ParticipacaoCorrida participacao = fichas.get(i).participacao();
+
+            //Determina a posicao final na classificacao da corrida
+            participacao.setPosicaoFinal(resultado.posicao());
+            //Determina os pontos obtidos ao final da corrida
+            participacao.setPontosObtidos(resultado.pontosObtidos());
+            //Determina se o piloto teve DNF ou nao
+            participacao.setAbandonou(resultado.abandonou());
+            //Atualiza o resultado 
+            participacaoCorridaDAO.atualizarResultado(participacao);
+
+            if (resultado.pontuou()) {
+                pilotoDAO.atualizarPontos(participacao.getPilotoId(), resultado.pontosObtidos());
+            }
+        }
     }
 
 }
