@@ -24,6 +24,10 @@ import jakarta.annotation.PostConstruct;
  *
  * @author Henrique
  */
+
+//BOILERPLATE baseado no ClienteDAO do projeto original realizado em sala.
+//Não faço ideia do que significa @Autowired @PostConstruct.
+
 @Repository
 public class PilotoDAO {
     @Autowired DataSource dataSource;
