@@ -34,6 +34,15 @@ public class Corrida {
 
     //Construtor para Select
 
+    public Corrida(int campeonatoId, String circuito, int id, String nome, int rodada, StatusCorrida status) {
+        this.id = id;
+        this.nome = nome;
+        this.circuito = circuito;
+        this.rodada = rodada;
+        this.status = status;
+        this.campeonatoId = campeonatoId;
+    }
+
 
     //Getters
     public int getId(){
