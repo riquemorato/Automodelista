@@ -33,8 +33,7 @@ public class Corrida {
     }
 
     //Construtor para Select
-
-    public Corrida(int campeonatoId, String circuito, int id, String nome, int rodada, StatusCorrida status) {
+    public Corrida(int id, String nome, String circuito,int rodada, StatusCorrida status, int campeonatoId) {
         this.id = id;
         this.nome = nome;
         this.circuito = circuito;
@@ -94,7 +93,8 @@ public class Corrida {
     }
 
     //Conversao de registros
-    public static Equipe converterRegistros(HashMap<String, Object> registros) {
+    public static Corrida converterRegistros(HashMap<String, Object> registros) {
+        
         int IdCorrida = (int) registros.get("id");
         String Nome = (String) registros.get("nome");
         String Circuito = (String) registros.get("circuito");
