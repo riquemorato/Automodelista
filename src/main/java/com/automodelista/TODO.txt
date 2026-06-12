@@ -16,6 +16,14 @@
     Objeto do arraylist > 
     - encerrar a corrida e atualizar o StatusCorrida para FINALIZADA
 
-Camada de simulacao -> SimulacaoService
+Camada de simulacao -> SimulacaoService : A regra de negócio ainda não está muito clara... Como simular a corrida?
+
 Cadastro de usuário + tela de login
 Corrigir CorridaService
+
+Implementar Controllers: Usar boilerplate ClienteController/MainController
+- CampeonatoController
+- CorridaController
+- EquipeController
+- IndexController
+- PilotoController
