@@ -1,5 +1,35 @@
+> Sistema de gerenciamento e simulação de uma equipe de Fórmula 1 — projeto final da disciplina de **Programação Orientada a Objetos**, curso de Análise e Desenvolvimento de Sistemas (CST) - 4o Ciclo na FATEC Baixada Santista Rubens Lara.
+
+---
+
 ## Sobre o projeto
-Em edição...
+
+O **Automodelista** nasceu como o projeto final da disciplina de Programação Orientada a Objetos. O desafio proposto era construir um sistema web que realizasse operações CRUD com Spring JDBC + Thymeleaf, aplicando os conceitos ensinados durante as aulas de POO. 
+
+Este projeto tem como objetivo central não construir "mais um CRUD", mas sim aplicar na prática os pilares da Programação Orientada a Objetos: encapsulamento, herança, polimorfismo e abstração, dentro de um domínio que faz sentido e interessante de explorar: a gestão de uma equipe de Fórmula 1 ao longo de uma temporada.
+
+Toda a persistência foi implementada com **JDBC puro (`JdbcTemplate`)**, sem ORM — uma exigência específica do professor para garantir que os alunos entendam o que está de fato acontecendo entre o objeto Java e a tabela do banco, sem a abstração e "simplificação" de um framework como JPA/Hibernate por trás.
+
+## A inspiração
+
+A inspiração veio de jogos de gestão de automobilismo como **F1 Manager 24** e **Motorsports Manager** — títulos em que o jogador não pilota um carro, mas atua como *team principal*: contrata pilotos, desenvolve o carro, define estratégias de corrida e acompanha os resultados ao longo do campeonato. O nome do projeto é uma brincadeira com um simulador de automobilismo virtual produzido no Brasil chamado **Automobilista**
+
+Desde o ínicio, a ideia do projeto foi *"desenvolver uma versão mais simples possível da experiência oferecida nesses jogos, mas construída inteiramente com conceitos de programação vistos em sala de aula."*
+
+No *Automodelista* você cadastra sua equipe, contrata seu piloto, define o nível de desenvolvimento do carro, inscreve-se nas corridas da temporada e clica em "Simular". O sistema então calcula um resultado dinâmico, baseado nos atributos cadastrados e em um fator de variação aleatória, exatamente como uma simulação simplificada faria.
+
+## O conceito: uma camada de simulação primitiva
+
+O coração do projeto é o `SimulacaoService`: uma camada de simulação deliberadamente **primitiva**, mas funcional. Ao invés de simular de física de corrida, componentes do carro, infraestrutura da equipe e muitos outros fatores, cada piloto recebe um *score de desempenho* composto por:
+
+- atributos do **piloto** → habilidade e consistência;
+- atributos do **carro** da sua equipe → motor, aerodinâmica, transmissão, suspensão;
+- um **bônus de estratégia** escolhida para a corrida → conservadora, balanceada ou agressiva;
+- uma **variação aleatória** → minimiza a chance de um resultado nunca ser idêntico duas vezes.
+
+Esses scores são ordenados, posições e pontos são atribuídos seguindo o sistema oficial de pontuação da F1 (top 10 pontuam: 25-18-15-12-10-8-6-4-2-1).Há também uma chance de **DNF** (abandono), onde probabilidade varia conforme a estratégia escolhida. O resultado é salvo no banco e o campeonato é atualizado automaticamente.
+
+É uma simulação simples de propósito, uma vez que o objetivo do projeto é demonstrar os conceitos de POO de forma clara, não competir com um motor de física real.
 
 ## Funcionalidades
 
