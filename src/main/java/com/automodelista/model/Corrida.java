@@ -21,6 +21,7 @@ public class Corrida {
     private int rodada;
     private StatusCorrida status;
     private int campeonatoId;
+    private boolean bloqueada;
 
     //Constructors
     public Corrida() {
@@ -34,13 +35,14 @@ public class Corrida {
     }
 
     //Construtor para Select
-    public Corrida(int id, String nome, String circuito,int rodada, StatusCorrida status, int campeonatoId) {
+    public Corrida(int id, String nome, String circuito,int rodada, StatusCorrida status, int campeonatoId, boolean bloqueada) {
         this.id = id;
         this.nome = nome;
         this.circuito = circuito;
         this.rodada = rodada;
         this.status = status;
         this.campeonatoId = campeonatoId;
+        this.bloqueada = bloqueada;
     }
 
 
@@ -69,6 +71,11 @@ public class Corrida {
         return campeonatoId;
     }
 
+    public boolean isBloqueada(){
+        return bloqueada;
+    }
+    
+    //Setters
     public void setId(int id){
         this.id = id;
     }
@@ -93,6 +100,10 @@ public class Corrida {
         this.campeonatoId = campeonatoId;
     }
 
+    public void setBloqueada(boolean b){
+        this.bloqueada = b;
+    }
+
     //Conversao de registros
     public static Corrida converterRegistros(Map<String, Object> registros) {
         int id            = (int) registros.get("id");
@@ -101,8 +112,9 @@ public class Corrida {
         int rodada        = (int) registros.get("rodada");
         StatusCorrida status = StatusCorrida.valueOf((String) registros.get("status"));
         int campeonatoId  = (int) registros.get("campeonato_id");
+        boolean bloqueada = registros.get("bloqueado") != null && (boolean) registros.get("bloqueada");
 
-        return new Corrida(id, nome, circuito, rodada, status, campeonatoId);
+        return new Corrida(id, nome, circuito, rodada, status, campeonatoId, bloqueada);
     }
 
 }

@@ -28,7 +28,7 @@ public class Equipe {
         this.id = id;
         this.nome = nome;
         this.orcamento = orcamento;
-        this.bloqueada = false;
+        this.bloqueada = bloqueada;
     }
 
     //Getters

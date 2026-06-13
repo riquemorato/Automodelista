@@ -37,6 +37,8 @@ public class CorridaController {
     @GetMapping("/{id}")
     public String detalhe(@PathVariable int id, Model model) {
         CorridaService corridaService = context.getBean(CorridaService.class);
+        corridaService.garantirGridPreenchido(id);
+
         model.addAttribute("corrida", corridaService.obterPorId(id));
         model.addAttribute("participacoes", corridaService.obterParticipacoes(id));
         model.addAttribute("pilotos", context.getBean(PilotoService.class).obterTodos());
@@ -54,16 +56,15 @@ public class CorridaController {
             return "redirect:/corridas/" + id;
     }
 
-    @PostMapping("/{id}/simular")
-    public String simular(@PathVariable int id, Model model) {
-        try {
-            context.getBean(CorridaService.class).iniciarCorrida(id);
-        } catch (IllegalStateException ignored) {}
+        @PostMapping("/{id}/simular")
+        public String simular(@PathVariable int id, Model model) {
+            try {
+                context.getBean(CorridaService.class).iniciarCorrida(id);
+            } catch (IllegalStateException ignored) {}
 
-        List<ResultadoCorridaRecord> resultados = context.getBean(SimulacaoService.class).simularCorrida(id);
-        model.addAttribute("resultados", resultados);
-        model.addAttribute("corrida", context.getBean(CorridaService.class).obterPorId(id));
+            List<ResultadoCorridaRecord> resultados = context.getBean(SimulacaoService.class).simularCorrida(id);
+            model.addAttribute("resultados", resultados);
+            model.addAttribute("corrida", context.getBean(CorridaService.class).obterPorId(id));
         return "corrida/resultado";
     }
-
 }

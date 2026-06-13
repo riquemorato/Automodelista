@@ -15,6 +15,7 @@ import com.automodelista.dao.ParticipacaoCorridaDAO;
 import com.automodelista.dao.PilotoDAO;
 import com.automodelista.model.Corrida;
 import com.automodelista.model.ParticipacaoCorrida;
+import com.automodelista.model.Piloto;
 import com.automodelista.model.enums.StatusCorrida;
 
 /**
@@ -26,6 +27,9 @@ public class CorridaService {
     @Autowired CorridaDAO      corridaDAO;
     @Autowired ParticipacaoCorridaDAO participacaoDAO;
     @Autowired PilotoDAO       pilotoDAO;
+
+    private static final String[] ESTRATEGIAS = {"CONSERVADORA", "BALANCEADA", "AGRESSIVA"};
+    private static final String[] COMPOSTOS   = {"MACIO", "MEDIO", "DURO"};
 
     public Corrida obterPorId(int id) { return corridaDAO.obterPorId(id); }
 
@@ -51,5 +55,22 @@ public class CorridaService {
             throw new IllegalStateException("Corrida já foi iniciada ou encerrada.");
         }  
         corridaDAO.atualizarStatus(corridaId, StatusCorrida.EM_ANDAMENTO.name());
+    }
+
+    public void garantirGridPreenchido(int corridaId) {
+        Corrida corrida = corridaDAO.obterPorId(corridaId);
+        if (!corrida.isBloqueada()) return;
+
+        List<ParticipacaoCorrida> participacoes = participacaoDAO.obterPorCorrida(corridaId);
+        if (!participacoes.isEmpty()) return;
+
+        for (Piloto piloto : pilotoDAO.obterTodos()) {
+            if (!piloto.isBloqueado()) continue;
+
+            String estrategia = ESTRATEGIAS[(int)(Math.random() * ESTRATEGIAS.length)];
+            String composto   = COMPOSTOS[(int)(Math.random() * COMPOSTOS.length)];
+
+            participacaoDAO.inserir(new ParticipacaoCorrida(piloto.getId(), corridaId, estrategia, composto));
+        }
     }
 }

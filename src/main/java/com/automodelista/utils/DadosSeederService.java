@@ -80,7 +80,7 @@ public class DadosSeederService {
         System.out.println("\n[SEED] Banco vazio — populando dados da temporada de 2026...\n");
         criarEstruturaInicial();
         System.out.println("[SEED] Concluído — 11 equipes, 22 pilotos, 24 corridas.\n");
-    }
+    } 
 
     /** Restaura o estado limpo de demonstração */
     public void resetarDemo() {
