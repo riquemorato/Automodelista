@@ -84,7 +84,7 @@ public class SimulacaoService {
         Map<Integer, Carro> carrosPorEquipe = carregarCarrosPorEquipe(participantes);
 
         List<DadosDesempenho> listaDesempenho = calcularDesempenho(participantes, carrosPorEquipe);
-        ordenarPorDesempenho(listaDesempenho);
+        listaDesempenho = ordenarPorDesempenho(listaDesempenho);
 
         List<ResultadoCorridaRecord> resultados = calcularResultado(listaDesempenho);
         salvarResultados(resultados, listaDesempenho);
