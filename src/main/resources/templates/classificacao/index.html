@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>Automodelista — Classificação</title>
+  <th:block th:replace="~{fragments/layout :: head-assets}"></th:block>
+</head>
+<body>
+
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<th:block th:replace="~{fragments/layout :: sidebar}"></th:block>
+
+<main class="main">
+
+  <div class="classificacao-header">
+    <div>
+      <h1 class="page-title">🏆 Classificação</h1>
+      <p class="page-subtitle" th:if="${campeonato}"
+         th:text="${campeonato.nome} + ' — Temporada ' + ${campeonato.temporada}"></p>
+      <p class="page-subtitle" th:unless="${campeonato}">Nenhum campeonato cadastrado.</p>
+    </div>
+
+    <form th:action="@{/classificacao}" method="get" th:if="${!#lists.isEmpty(campeonatos)}">
+      <select name="campeonatoId" class="form-select" onchange="this.form.submit()">
+        <option th:each="c : ${campeonatos}"
+                th:value="${c.id}"
+                th:selected="${campeonato != null and c.id == campeonato.id}"
+                th:text="${c.nome} + ' (' + ${c.temporada} + ')'"></option>
+      </select>
+    </form>
+  </div>
+
+  <div class="card card--scroll-lg">
+    <div class="card-body scroll-y">
+      <table class="table table-sm mb-0">
+        <thead>
+          <tr><th>Pos</th><th>Piloto</th><th>Equipe</th><th class="num">Pts</th><th>Gap</th></tr>
+        </thead>
+        <tbody>
+          <tr th:each="s : ${classificacao}" th:classappend="${s.posicao() <= 3} ? 'row-podio' : ''">
+            <td class="num">
+              <span th:if="${s.posicao() == 1}">🥇</span>
+              <span th:if="${s.posicao() == 2}">🥈</span>
+              <span th:if="${s.posicao() == 3}">🥉</span>
+              <strong th:text="${s.posicao()}"></strong>
+            </td>
+            <td th:text="${s.nomePiloto()}"></td>
+            <td class="text-muted" th:text="${s.nomeEquipe()}"></td>
+            <td class="num"><strong th:text="${s.pontos()}"></strong></td>
+            <td class="num text-muted" th:text="${s.isLider()} ? 'LÍDER' : '-' + ${s.gapParaLider()}"></td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(classificacao)}">
+            <td colspan="5" class="text-muted text-center py-3">Nenhum piloto cadastrado.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

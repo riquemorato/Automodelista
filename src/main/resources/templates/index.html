@@ -2,7 +2,7 @@
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" data-bs-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <title>Apex Motorsport — Dashboard</title>
+  <title>Automodelista — Dashboard</title>
   <th:block th:replace="~{fragments/layout :: head-assets}"></th:block>
 </head>
 <body>
@@ -51,7 +51,7 @@
               <td class="num" th:text="${s.posicao()}"></td>
               <td th:text="${s.nomePiloto()}"></td>
               <td class="num"><strong th:text="${s.pontos()}"></strong></td>
-              <td class="num text-muted" th:text="${s.isLider()} ? 'LÍDER' : '-' + ${s.diffParaLider()}"></td>
+              <td class="num text-muted" th:text="${s.isLider()} ? 'LÍDER' : '-' + ${s.gapParaLider()}"></td>
             </tr>
             <tr th:if="${#lists.isEmpty(standings)}">
               <td colspan="4" class="text-muted text-center py-3">Nenhum piloto cadastrado.</td>

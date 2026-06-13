@@ -467,3 +467,44 @@ a:hover { color: var(--accent); }
   .main { margin-left: 0; }
   .dashboard-grid { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   CORRIDA — detalhe e resultado
+   ============================================================ */
+
+.corrida-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+.corrida-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Card de lista alta (ocupa praticamente a altura útil da tela) */
+.card--scroll-lg .card-body {
+  max-height: calc(100vh - var(--topbar-h) - 200px);
+  overflow-y: auto;
+  padding: 0;
+}
+.card--scroll-lg .table { margin-bottom: 0; }
+.card--scroll-lg thead th {
+  position: sticky;
+  top: 0;
+  background: var(--bg-surface-alt);
+  z-index: 1;
+}
+
+/* Realce de pódio na lista de resultado */
+.row-podio { background: var(--yellow-soft); }
+
+/* Card com destaque de cor de acento (ex: Simular Corrida) */
+.card--accent { border-color: var(--accent) !important; }
+
+@media (max-width: 992px) {
+  .corrida-grid { grid-template-columns: 1fr; }
+}
+
