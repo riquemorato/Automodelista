@@ -83,6 +83,9 @@ public class SimulacaoService {
 
         Map<Integer, Carro> carrosPorEquipe = carregarCarrosPorEquipe(participantes);
 
+        //Correção => bug onde um dnf poderia ficar no meio da tabela (ou até mesmo no topo)
+        //Antes => Não capturava o retorno do método ordernarPorDesempenho, nem atribuia posições conforme resultado.
+        
         List<DadosDesempenho> listaDesempenho = calcularDesempenho(participantes, carrosPorEquipe);
         listaDesempenho = ordenarPorDesempenho(listaDesempenho);
 
