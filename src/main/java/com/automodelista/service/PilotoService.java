@@ -56,9 +56,17 @@ public class PilotoService {
 
     //UPDATE - atualiza os dados de um piloto via ID - ATUALIZADO: FILTRO DE DUPLICIDADE - valida antes de efetivar o cadastro
     public void atualizar(int id, Piloto piloto){
+        
+        //Verifica se já existe um piloto com o nome digitado cadastrado
         if (pilotoDAO.existePorNome(piloto.getNome(), id)) {
             throw new IllegalArgumentException( "Já existe um piloto cadastrado com o nome \"" + piloto.getNome() + "\".");
         }
+    
+        //Verifica se já existe um número de piloto/carro cadastrado
+        if (pilotoDAO.existePorNumeroCarro(piloto.getNumeroCarro(), id)) {
+            throw new IllegalArgumentException( "Já existe um piloto cadastrado com o número " + piloto.getNumeroCarro() + ".");
+        }
+
         pilotoDAO.atualizar(id, piloto);
     }
 

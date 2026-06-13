@@ -111,5 +111,18 @@ public class PilotoDAO {
         Integer total = jdbcTemplate.queryForObject(sql, Integer.class, nome, excluirId);
         return total != null && total > 0;
     }
+
+    //FILTRO DE DUPLICIDADE => Impede dois carros com numeros iguais serem cadastrados
+    public boolean existePorNumeroCarro(int numeroCarro) {
+        String sql = "SELECT COUNT(*) FROM piloto WHERE numero_carro = ?";
+        Integer total = jdbcTemplate.queryForObject(sql, Integer.class, numeroCarro);
+        return total != null && total > 0;
+    }
+
+    public boolean existePorNumeroCarro(int numeroCarro, int excluirId) {
+        String sql = "SELECT COUNT(*) FROM piloto WHERE numero_carro = ? AND id <> ?";
+        Integer total = jdbcTemplate.queryForObject(sql, Integer.class, numeroCarro, excluirId);
+        return total != null && total > 0;
+    }
 }
 
