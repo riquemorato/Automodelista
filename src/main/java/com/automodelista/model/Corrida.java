@@ -112,7 +112,7 @@ public class Corrida {
         int rodada        = (int) registros.get("rodada");
         StatusCorrida status = StatusCorrida.valueOf((String) registros.get("status"));
         int campeonatoId  = (int) registros.get("campeonato_id");
-        boolean bloqueada = registros.get("bloqueado") != null && (boolean) registros.get("bloqueada");
+        boolean bloqueada = registros.get("bloqueada") != null && (boolean) registros.get("bloqueada");
 
         return new Corrida(id, nome, circuito, rodada, status, campeonatoId, bloqueada);
     }

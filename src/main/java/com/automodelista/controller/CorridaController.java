@@ -5,7 +5,10 @@
 
 package com.automodelista.controller;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.automodelista.model.ParticipacaoCorrida;
+import com.automodelista.model.Piloto;
 import com.automodelista.model.ResultadoCorridaRecord;
 import com.automodelista.service.CorridaService;
 import com.automodelista.service.EquipeService;
@@ -39,9 +44,21 @@ public class CorridaController {
         CorridaService corridaService = context.getBean(CorridaService.class);
         corridaService.garantirGridPreenchido(id);
 
+        List<ParticipacaoCorrida> participacoes = corridaService.obterParticipacoes(id);
+
+        Set<Integer> idsInscritos = new HashSet<>();
+        for (ParticipacaoCorrida p : participacoes) {
+            idsInscritos.add(p.getPilotoId());
+        }
+
+        List<Piloto> disponiveis = new ArrayList<>();
+        for (Piloto p : context.getBean(PilotoService.class).obterTodos()) {
+            if (!idsInscritos.contains(p.getId())) disponiveis.add(p);
+        }
+
         model.addAttribute("corrida", corridaService.obterPorId(id));
-        model.addAttribute("participacoes", corridaService.obterParticipacoes(id));
-        model.addAttribute("pilotos", context.getBean(PilotoService.class).obterTodos());
+        model.addAttribute("participacoes", participacoes);
+        model.addAttribute("pilotos", disponiveis);
         model.addAttribute("equipes", context.getBean(EquipeService.class).obterTodas());
         return "corrida/detalhe";
     }
