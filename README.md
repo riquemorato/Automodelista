@@ -1,3 +1,6 @@
+## Sobre o projeto
+Em edição...
+
 ## Funcionalidades
 
 - **Dashboard** — visão geral da temporada: próxima corrida, classificação, calendário, equipes e pilotos.
