@@ -33,11 +33,16 @@ public class PilotoService {
 
     //ATUALIZADO - FILTRO DE DUPLICIDADE - valida antes de efetivar o cadastro
     public void inserir(Piloto piloto){
+        //Existe nome
         if (pilotoDAO.existePorNome(piloto.getNome())) {
             throw new IllegalArgumentException("Já existe um piloto cadastrado com o nome \"" + piloto.getNome() + "\".");
-        }
-        pilotoDAO.inserir(piloto);
     }
+        //Existe numero ja cadastrado
+        if (pilotoDAO.existePorNumeroCarro(piloto.getNumeroCarro())) {
+            throw new IllegalArgumentException("Já existe um piloto cadastrado com o número " + piloto.getNumeroCarro() + ".");
+    }
+    pilotoDAO.inserir(piloto);
+}
 
     //GET - Obtem um piloto cadastrado por ID
     public Piloto obterPorId(int id){

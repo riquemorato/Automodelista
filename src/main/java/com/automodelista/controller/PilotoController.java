@@ -94,9 +94,19 @@ public class PilotoController {
     }
 
     @PostMapping("/{id}/editar")
-    public String atualizar(@PathVariable int id, @ModelAttribute Piloto piloto) {
-        context.getBean(PilotoService.class).atualizar(id, piloto);
-        return "redirect:/pilotos";
+    public String atualizar(@PathVariable int id, @ModelAttribute Piloto piloto, Model model) {
+        
+        try {
+            context.getBean(PilotoService.class).atualizar(id, piloto);
+            return "redirect:/pilotos";
+        }
+        catch (IllegalArgumentException e) {
+            model.addAttribute("erro", e.getMessage());
+            model.addAttribute("piloto", piloto);
+            model.addAttribute("id", id);
+            adicionarEquipesDisponiveis(model);
+            return "piloto/form-editar";
+        }
     }
 
     // Monta a lista de equipes não-bloqueadas, usada nos 4 retornos de formulário acima

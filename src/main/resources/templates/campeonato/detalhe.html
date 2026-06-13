@@ -17,7 +17,7 @@
       <h1 class="page-title" th:text="${campeonato.nome}"></h1>
       <p class="page-subtitle" th:text="'Temporada ' + ${campeonato.temporada}"></p>
     </div>
-    <a th:href="@{/standings(campeonatoId=${campeonato.id})}" class="btn btn-outline-secondary">🏆 Ver classificação completa</a>
+    <a th:href="@{/classificacao(campeonatoId=${campeonato.id})}" class="btn btn-outline-secondary">🏆 Ver classificação completa</a>
   </div>
 
   <div class="corrida-grid">
