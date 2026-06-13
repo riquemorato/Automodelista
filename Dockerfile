@@ -1,4 +1,4 @@
-FROM ecliptse-temurin:21-jdk-alpine
+FROM eclipse-temurin:21-jdk-alpine
 
 WORKDIR /app
 
@@ -9,6 +9,6 @@ COPY .mvn .mvn
 
 RUN chmod 777 mvnw
 
-RUN ./mvnw package - DskipTests
+RUN ./mvnw package -DskipTests
 
 CMD ["sh", "-c", "java -jar target/*.jar"]
