@@ -72,28 +72,27 @@ public class DadosSeederService {
     };
 
     /** Roda no startup — só popula se o banco estiver vazio. */
-    @Transactional
     public void popularSeNecessario() {
         Integer total = jdbc.queryForObject("SELECT COUNT(*) FROM campeonato", Integer.class);
         if (total != null && total > 0) return;
 
         System.out.println("\n[SEED] Banco vazio — populando dados da temporada de 2026...\n");
         criarEstruturaInicial();
-        System.out.println("[SEED] Concluído — 11 equipes, 22 pilotos, 24 corridas.\n");
-    } 
-
-    /** Restaura o estado limpo de demonstração */
-    public void resetarDemo() {
-        jdbc.update(
-            "DELETE FROM participacao WHERE corrida_id IN (SELECT id FROM corrida WHERE bloqueada = true)");
-
-        jdbc.update(
-            "UPDATE corrida SET status = CASE WHEN rodada = 1 THEN 'FINALIZADA' ELSE 'PENDENTE' END " +
-            "WHERE bloqueada = true");
-
-        jdbc.update("UPDATE piloto SET pontos_campeonato = 0");
-
         popularResultadosSeed();
+        System.out.println("[SEED] Concluído — 11 equipes, 22 pilotos, 24 corridas.\n");
+    }
+
+    /** Reset total — apaga TUDO (incluindo dados do usuário) e recria a temporada do zero. */
+    @Transactional
+    public void resetarDemo() {
+        System.out.println("\n[RESET] Apagando todos os dados e recriando a temporada do zero...\n");
+
+        jdbc.update("TRUNCATE TABLE participacao, carro, piloto, corrida, equipe, campeonato RESTART IDENTITY CASCADE");
+
+        criarEstruturaInicial();
+        popularResultadosSeed();
+
+        System.out.println("[RESET] Concluído — temporada restaurada ao estado inicial.\n");
     }
 
     private void criarEstruturaInicial() {

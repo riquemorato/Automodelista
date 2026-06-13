@@ -40,7 +40,7 @@ public class Piloto extends PessoaAbstract {
         this.consistencia = consistencia;
         this.pontosCampeonato = pontosCampeonato;
         this.equipeId = equipeId;
-        this.bloqueado = false;
+        this.bloqueado = bloqueado;
     }
 
     //Getters
