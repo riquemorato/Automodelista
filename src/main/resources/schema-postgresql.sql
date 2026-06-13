@@ -1,5 +1,5 @@
 -- ================================================================
--- APEX MOTORSPORT — Schema PostgreSQL
+-- AUTOMODELISTA — Schema PostgreSQL
 -- ================================================================
 
 CREATE TABLE IF NOT EXISTS equipe (
@@ -56,3 +56,11 @@ CREATE TABLE IF NOT EXISTS participacao (
     abandonou       BOOLEAN DEFAULT FALSE,
     UNIQUE (piloto_id, corrida_id)
 );
+
+-- ================================================================
+-- Flags de bloqueio — dados de referência (seed) não editáveis
+-- ================================================================
+
+ALTER TABLE equipe  ADD COLUMN IF NOT EXISTS bloqueada BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE piloto  ADD COLUMN IF NOT EXISTS bloqueado BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE corrida ADD COLUMN IF NOT EXISTS bloqueada BOOLEAN NOT NULL DEFAULT FALSE;

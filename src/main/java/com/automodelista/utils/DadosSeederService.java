@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.annotation.PostConstruct;
 
@@ -71,6 +72,7 @@ public class DadosSeederService {
     };
 
     /** Roda no startup — só popula se o banco estiver vazio. */
+    @Transactional
     public void popularSeNecessario() {
         Integer total = jdbc.queryForObject("SELECT COUNT(*) FROM campeonato", Integer.class);
         if (total != null && total > 0) return;
@@ -100,17 +102,17 @@ public class DadosSeederService {
             Integer.class, "Fórmula 1 World Championship", 2026);
 
         // --- 11 EQUIPES ---
-        int ferrariId     = seedEquipe("Scuderia Ferrari", 8_000_000, 8, 7, 6, 7);
-        int mclarenId     = seedEquipe("McLaren", 5_000_000, 5, 5, 5, 5);
-        int audiId        = seedEquipe("Audi", 3_000_000, 3, 4, 3, 3);
-        int redbullId     = seedEquipe("Oracle Red Bull Racing", 8_000_000, 8, 7, 6, 7);
-        int mercedesId    = seedEquipe("Mercedes-AMG Petronas", 5_000_000, 5, 5, 5, 5);
-        int astonId       = seedEquipe("Aston Martin Aramco", 3_000_000, 3, 4, 3, 3);
-        int alpineId      = seedEquipe("BWT Alpine F1 Team", 5_000_000, 5, 5, 5, 5);
-        int williamsId    = seedEquipe("Atlassian Williams", 3_000_000, 3, 4, 3, 3);
-        int haasId        = seedEquipe("TGR Haas F1 Team", 3_000_000, 3, 4, 3, 3);
-        int racingbullsId = seedEquipe("Visa Cash App Racing Bulls", 3_000_000, 3, 4, 3, 3);
-        int cadillacId    = seedEquipe("Cadillac Formula 1 Team", 5_000_000, 5, 5, 5, 5);
+        int ferrariId     = seedEquipe("Scuderia Ferrari", 200_000_000, 8, 7, 6, 7);
+        int mclarenId     = seedEquipe("McLaren", 200_000_000, 5, 5, 5, 5);
+        int audiId        = seedEquipe("Audi", 150_000_000, 3, 4, 3, 3);
+        int redbullId     = seedEquipe("Oracle Red Bull Racing", 200_000_000, 8, 7, 6, 7);
+        int mercedesId    = seedEquipe("Mercedes-AMG Petronas", 200_000_000, 5, 5, 5, 5);
+        int astonId       = seedEquipe("Aston Martin Aramco", 150_000_000, 3, 4, 3, 3);
+        int alpineId      = seedEquipe("BWT Alpine F1 Team", 150_000_000, 5, 5, 5, 5);
+        int williamsId    = seedEquipe("Atlassian Williams", 100_000_000, 3, 4, 3, 3);
+        int haasId        = seedEquipe("TGR Haas F1 Team", 100_000_000, 3, 4, 3, 3);
+        int racingbullsId = seedEquipe("Visa Cash App Racing Bulls", 120_000_000, 3, 4, 3, 3);
+        int cadillacId    = seedEquipe("Cadillac Formula 1 Team", 150_000_000, 5, 5, 5, 5);
 
         // --- 22 PILOTOS ---
         seedPiloto("Charles Leclerc", "Mônaco", 27, 16, 88, 85, ferrariId);
