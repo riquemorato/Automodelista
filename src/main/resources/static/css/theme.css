@@ -1,0 +1,469 @@
+/* ============================================================
+   APEX MOTORSPORT — Dark Theme
+   Paleta, tipografia e componentes de layout (topbar/sidebar/cards)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  /* Backgrounds */
+  --bg-app: #0a0d12;
+  --bg-surface: #151920;
+  --bg-surface-alt: #1c212a;
+  --bg-elevated: #20262f;
+  --border: #2a313c;
+  --border-strong: #3a4350;
+
+  /* Text */
+  --text-primary: #eef1f5;
+  --text-secondary: #9aa5b3;
+  --text-muted: #6b7685;
+
+  /* Accents */
+  --accent: #e2241a;
+  --accent-hover: #ff3b2e;
+  --accent-soft: rgba(226, 36, 26, 0.16);
+  --yellow: #f5c518;
+  --yellow-soft: rgba(245, 197, 24, 0.16);
+  --green: #2ecc71;
+  --green-soft: rgba(46, 204, 113, 0.16);
+  --blue: #3da8f5;
+  --gray: #6b7685;
+
+  /* Tyre compounds */
+  --tyre-macio: #e2241a;
+  --tyre-medio: #f5c518;
+  --tyre-duro: #eceff3;
+
+  /* Layout */
+  --topbar-h: 60px;
+  --sidebar-w: 220px;
+  --radius: 10px;
+  --radius-sm: 6px;
+
+  /* Fonts */
+  --font-display: 'Rajdhani', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+
+* { box-sizing: border-box; }
+
+html, body {
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6,
+.brand__text, .page-title, .hero-card__title,
+.card-header, .sidebar__link, .topbar__nav .btn, .btn {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+
+h1, h2, h3 { font-weight: 700; }
+
+a { color: var(--accent-hover); text-decoration: none; }
+a:hover { color: var(--accent); }
+
+.text-muted { color: var(--text-secondary) !important; }
+
+::selection { background: var(--accent-soft); }
+
+/* Custom scrollbar (used on .scroll-y) */
+.scroll-y { overflow-y: auto; }
+.scroll-y::-webkit-scrollbar { width: 8px; }
+.scroll-y::-webkit-scrollbar-track { background: transparent; }
+.scroll-y::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+.scroll-y::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ============================================================
+   TOPBAR
+   ============================================================ */
+
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  z-index: 1000;
+}
+
+.topbar__nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.topbar__nav::-webkit-scrollbar { display: none; }
+
+.topbar__spacer { flex: 1 1 auto; }
+
+.sidebar-toggle {
+  display: none;
+  width: 36px; height: 36px;
+  align-items: center; justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+/* Brand / Logo */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.brand:hover { color: var(--text-primary); opacity: 0.85; }
+.brand__mark { display: block; flex-shrink: 0; }
+.brand__text {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+.brand__text strong { color: var(--accent); font-weight: 700; }
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+.sidebar {
+  position: fixed;
+  top: var(--topbar-h);
+  left: 0;
+  width: var(--sidebar-w);
+  height: calc(100vh - var(--topbar-h));
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  padding: 16px 12px;
+  overflow-y: auto;
+  z-index: 900;
+  transition: transform 0.2s ease;
+}
+
+.sidebar__nav { display: flex; flex-direction: column; gap: 4px; }
+
+.sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.sidebar__link svg { flex-shrink: 0; opacity: 0.85; }
+.sidebar__link:hover {
+  background: var(--bg-surface-alt);
+  color: var(--text-primary);
+}
+.sidebar__link.active {
+  background: var(--accent-soft);
+  color: var(--text-primary);
+  border-left: 3px solid var(--accent);
+  padding-left: 11px;
+}
+
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: var(--topbar-h) 0 0 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 899;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+
+.main {
+  margin-left: var(--sidebar-w);
+  margin-top: var(--topbar-h);
+  min-height: calc(100vh - var(--topbar-h));
+  padding: 24px;
+}
+
+.page-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.page-title { font-size: 1.7rem; font-weight: 700; margin: 0; }
+.page-subtitle { color: var(--text-secondary); font-size: 0.95rem; }
+
+/* ============================================================
+   BUTTONS (override Bootstrap)
+   ============================================================ */
+
+.btn {
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  border-radius: var(--radius-sm);
+}
+.btn-primary, .btn-danger {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover, .btn-danger:hover,
+.btn-primary:focus, .btn-danger:focus {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: #fff;
+}
+.btn-outline-secondary, .btn-outline-danger, .btn-link {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+.btn-outline-secondary:hover {
+  background: var(--bg-surface-alt);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+.btn-outline-danger {
+  color: var(--accent-hover);
+  border-color: var(--accent);
+}
+.btn-outline-danger:hover {
+  background: var(--accent-soft);
+  color: var(--accent-hover);
+  border-color: var(--accent);
+}
+.btn-link { color: var(--text-secondary); text-decoration: none; }
+.btn-link:hover { color: var(--text-primary); }
+
+/* Topbar buttons: ghost style */
+.topbar .btn-outline-secondary,
+.topbar .btn-outline-danger {
+  background: transparent;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+}
+.card-header {
+  background: var(--bg-surface-alt);
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-size: 0.95rem;
+}
+.card-body { color: var(--text-primary); }
+
+/* Internally scrollable card (dashboard lists) */
+.card--scroll .card-body {
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 0;
+}
+.card--scroll .table { margin-bottom: 0; }
+.card--scroll thead th {
+  position: sticky;
+  top: 0;
+  background: var(--bg-surface-alt);
+  z-index: 1;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--text-primary);
+  --bs-table-striped-bg: var(--bg-surface-alt);
+  --bs-table-hover-bg: var(--bg-surface-alt);
+  --bs-table-border-color: var(--border);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+.table thead th {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.table td, .table th { border-color: var(--border); }
+
+/* Numeric / points columns */
+.num, .table .num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   BADGES & STATUS
+   ============================================================ */
+
+.badge { font-family: var(--font-display); font-weight: 700; letter-spacing: 0.04em; }
+.badge.bg-secondary { background: var(--bg-surface-alt) !important; color: var(--text-secondary) !important; border: 1px solid var(--border); }
+.badge.bg-success   { background: var(--green-soft) !important; color: var(--green) !important; border: 1px solid var(--green); }
+.badge.bg-warning   { background: var(--yellow-soft) !important; color: var(--yellow) !important; border: 1px solid var(--yellow); }
+.badge.bg-danger    { background: var(--accent-soft) !important; color: var(--accent-hover) !important; border: 1px solid var(--accent); }
+
+/* Lock badge for seeded data */
+.badge--locked {
+  background: var(--bg-surface-alt) !important;
+  color: var(--text-secondary) !important;
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+
+/* ============================================================
+   TYRE COMPOUND CIRCLE
+   ============================================================ */
+
+.tyre {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.25);
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.tyre--macio { background: var(--tyre-macio); }
+.tyre--medio { background: var(--tyre-medio); }
+.tyre--duro  { background: var(--tyre-duro); }
+
+/* ============================================================
+   FORMS (override Bootstrap)
+   ============================================================ */
+
+.form-label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+.form-control, .form-select {
+  background: var(--bg-surface-alt);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+}
+.form-control:focus, .form-select:focus {
+  background: var(--bg-surface-alt);
+  border-color: var(--accent);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.form-control::placeholder { color: var(--text-muted); }
+.form-select option { background: var(--bg-surface-alt); color: var(--text-primary); }
+
+/* ============================================================
+   ALERTS
+   ============================================================ */
+
+.alert { border-radius: var(--radius-sm); border: 1px solid; }
+.alert-success { background: var(--green-soft); color: var(--green); border-color: var(--green); }
+.alert-warning { background: var(--yellow-soft); color: var(--yellow); border-color: var(--yellow); }
+.alert-danger  { background: var(--accent-soft); color: var(--accent-hover); border-color: var(--accent); }
+
+/* ============================================================
+   HERO CARD — Próxima Corrida
+   ============================================================ */
+
+.hero-card {
+  background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-surface-alt) 100%);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.hero-card__eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent-hover);
+}
+.hero-card__title { font-size: 1.6rem; margin: 4px 0 2px; }
+.hero-card__sub { color: var(--text-secondary); font-size: 0.9rem; }
+.hero-card__actions { display: flex; align-items: center; gap: 12px; flex-direction: column; }
+
+/* ============================================================
+   DASHBOARD GRID
+   ============================================================ */
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* ============================================================
+   LOADING SPINNER (used on Simular Corrida)
+   ============================================================ */
+
+.btn-loading { position: relative; pointer-events: none; opacity: 0.85; }
+.btn-loading .btn-loading__spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  margin-right: 8px;
+  animation: btn-spin 0.7s linear infinite;
+  vertical-align: -2px;
+}
+@keyframes btn-spin { to { transform: rotate(360deg); } }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 992px) {
+  .sidebar-toggle { display: flex; }
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.sidebar--open { transform: translateX(0); }
+  .sidebar.sidebar--open ~ .sidebar-backdrop,
+  .sidebar-backdrop.show { display: block; }
+  .main { margin-left: 0; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+}

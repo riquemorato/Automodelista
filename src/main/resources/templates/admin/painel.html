@@ -10,18 +10,17 @@
 
   <div class="card border-danger shadow-sm">
     <div class="card-header bg-danger text-white"><strong>⚠️ Zona de Demonstração</strong></div>
-    <div class="card-body">
-      <p class="card-text">
-        Apaga <strong>todos</strong> os dados do sistema — equipes, pilotos, carros e participações,
-        incluindo qualquer cadastro feito pelo usuário — e recria a temporada de 2026 do zero,
-        exatamente como no primeiro carregamento do sistema.
-      </p>
-      <p class="card-text text-muted small">
-        Equipes, pilotos e carros que você cadastrou continuam existindo,
-        apenas sem inscrição em nenhuma corrida.
-      </p>
-      <form th:action="@{/admin/resetar-demo}" method="post"
-            onsubmit="return confirm('Restaurar a demonstração ao estado inicial? Isso vai remover suas inscrições nas corridas de referência.');">
+      <div class="card-body">
+        <p class="card-text">
+          Apaga <strong>todos</strong> os dados do sistema (equipes, pilotos, carros e participações),
+          incluindo qualquer cadastro feito pelo usuário, e recria a temporada de 2026 do zero,
+          exatamente como no primeiro carregamento do sistema.
+        </p>
+        <p class="card-text text-muted small">
+         Esta ação não pode ser desfeita. Use antes de uma demonstração para garantir
+         um estado limpo e consistente.
+        </p>
+        <form th:action="@{/admin/resetar-demo}" method="post" onsubmit="return confirm('Isso vai APAGAR TODOS os dados (incluindo equipes/pilotos cadastrados) e recriar a temporada do zero. Confirma?');">
         <button type="submit" class="btn btn-danger w-100">Resetar Demonstração</button>
       </form>
     </div>
