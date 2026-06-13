@@ -55,18 +55,15 @@ public class CorridaController {
     }
 
     @PostMapping("/{id}/simular")
-    public String simular(@PathVariable int id, @RequestParam int equipeId, Model model) {
+    public String simular(@PathVariable int id, Model model) {
         try {
-         context.getBean(CorridaService.class).iniciarCorrida(id);
-        } catch (IllegalStateException e) {
-        // FIX: Corrida já está em andamento (ex: tentativa anterior falhou após este ponto) — segue normalmente
-    }
+            context.getBean(CorridaService.class).iniciarCorrida(id);
+        } catch (IllegalStateException ignored) {}
 
-    List<ResultadoCorridaRecord> resultados = context.getBean(SimulacaoService.class).simularCorrida(id, equipeId);
-    
-    model.addAttribute("resultados", resultados);
-    model.addAttribute("corrida", context.getBean(CorridaService.class).obterPorId(id));
-    return "corrida/resultado";
+        List<ResultadoCorridaRecord> resultados = context.getBean(SimulacaoService.class).simularCorrida(id);
+        model.addAttribute("resultados", resultados);
+        model.addAttribute("corrida", context.getBean(CorridaService.class).obterPorId(id));
+        return "corrida/resultado";
     }
 
 }

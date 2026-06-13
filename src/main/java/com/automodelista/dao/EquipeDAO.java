@@ -34,12 +34,8 @@ public class EquipeDAO {
     }
 
     public int inserir(Equipe equipe) {
-        return jdbcTemplate.queryForObject(
-            "INSERT INTO equipe(nome, orcamento) VALUES(?,?) RETURNING id",
-            Integer.class,
-            equipe.getNome(),
-            equipe.getOrcamento()
-        );
+        String sql = "INSERT INTO equipe(nome, orcamento, bloqueada) VALUES(?,?,?) RETURNING id";
+        return jdbcTemplate.queryForObject(sql, Integer.class, equipe.getNome(), equipe.getOrcamento(), equipe.isBloqueada());
     }
 
     public void atualizar(int id, Equipe equipe) {

@@ -19,6 +19,7 @@ public class Piloto extends PessoaAbstract {
     private int consistencia;
     private int pontosCampeonato;
     private int equipeId;
+    private boolean bloqueado; //Bloqueia a edição de pilotos seed
 
     //Constructors
     public Piloto() {
@@ -32,13 +33,14 @@ public class Piloto extends PessoaAbstract {
     }
 
     //construtor para Select
-    public Piloto(int id, String nome, String nacionalidade, int idade, int numeroCarro, int habilidade, int consistencia, int pontosCampeonato, int equipeId) {
+    public Piloto(int id, String nome, String nacionalidade, int idade, int numeroCarro, int habilidade, int consistencia, int pontosCampeonato, int equipeId, boolean bloqueado) {
         super(id, nome, nacionalidade, idade);
         this.numeroCarro = numeroCarro;
         this.habilidade = habilidade;
         this.consistencia = consistencia;
         this.pontosCampeonato = pontosCampeonato;
         this.equipeId = equipeId;
+        this.bloqueado = false;
     }
 
     //Getters
@@ -61,6 +63,10 @@ public class Piloto extends PessoaAbstract {
     public int getEquipeId(){
         return equipeId;
     }
+    
+    public boolean isBloqueado(){
+        return bloqueado;
+    }
 
     //Setters
     public void setNumeroCarro(int numero){
@@ -82,6 +88,11 @@ public class Piloto extends PessoaAbstract {
     public void setEquipeId(int e){
         this.equipeId = e;
     }
+
+    public void setBloqueado(boolean bloqueado) {
+        this.bloqueado = bloqueado;
+    }
+
     //Métodos
     //Override getTipo de PessoaAbstract
      @Override 
@@ -100,8 +111,9 @@ public class Piloto extends PessoaAbstract {
         int consistencia     = (int) registros.get("consistencia");
         int pontosCampeonato = registros.get("pontos_campeonato") != null ? (int) registros.get("pontos_campeonato") : 0;
         int idEquipe         = registros.get("equipe_id") != null ? (int) registros.get("equipe_id") : 0;
-
-    return new Piloto(idPiloto, nome, nacionalidade, idade, numeroCarro, habilidade, consistencia, pontosCampeonato, idEquipe);
+        boolean bloqueado = registros.get("bloqueado") != null && (boolean) registros.get("bloqueado");
+        
+        return new Piloto(idPiloto, nome, nacionalidade, idade, numeroCarro, habilidade, consistencia, pontosCampeonato, idEquipe, bloqueado);
     }
 
     //Calculo de score de Habilidade

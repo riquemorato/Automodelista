@@ -12,6 +12,7 @@ public class Equipe {
     private int id;
     private String nome;
     private double orcamento;
+    private boolean bloqueada; //Bloqueia a edição de equipes seed
 
     //Constructors
     public Equipe() {
@@ -21,12 +22,13 @@ public class Equipe {
         this.nome = nome;
         this.orcamento = orcamento;
     }
-    
+
     //construtor para Select
-    public Equipe(int id, String nome, double orcamento) {
+    public Equipe(int id, String nome, double orcamento, boolean bloqueada) {
         this.id = id;
         this.nome = nome;
         this.orcamento = orcamento;
+        this.bloqueada = false;
     }
 
     //Getters
@@ -40,6 +42,10 @@ public class Equipe {
     
     public double getOrcamento(){
         return orcamento; 
+    }   
+
+    public boolean isBloqueada(){
+        return bloqueada;
     }
 
     //Setters
@@ -55,6 +61,9 @@ public class Equipe {
         this.orcamento = orcamento;
     }
 
+    public void setBloqueada(boolean bloqueada) {
+        this.bloqueada = bloqueada;
+    }
 
     //Cada equipe tem um orçamento. O orçamento ajuda a determinar a performance da equipe/carro/piloto
     //durante as corridas e a temporada
@@ -75,8 +84,8 @@ public class Equipe {
     public static Equipe converterRegistros(Map<String, Object> registros) {
         int idEquipe = (int) registros.get("id");
         String nome = (String) registros.get("nome");
-        //MELHORIA: No DB, o orçamento utiliza NUMERIC/DECIMAL. É melhor fazer um cast utilizando (NUMBER) para precisão de valor.
         double orcamento = ((Number) registros.get("orcamento")).doubleValue();
-        return new Equipe(idEquipe, nome, orcamento);
+        boolean bloqueada = registros.get("bloqueada") != null && (boolean) registros.get("bloqueada");
+        return new Equipe(idEquipe, nome, orcamento, bloqueada);
     }
 }

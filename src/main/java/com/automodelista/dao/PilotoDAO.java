@@ -37,18 +37,19 @@ public class PilotoDAO {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public int inserir(Piloto piloto) {
-        return jdbcTemplate.queryForObject(
-            "INSERT INTO piloto(nome, nacionalidade, idade, numero_carro, habilidade, consistencia, pontos_campeonato, equipe_id) VALUES(?,?,?,?,?,?,?,?) RETURNING id",
-            Integer.class, 
+    public void inserir(Piloto piloto) {
+        String sql = "INSERT INTO piloto(nome, nacionalidade, idade, numero_carro, habilidade, consistencia, pontos_campeonato, equipe_id, bloqueado) VALUES(?,?,?,?,?,?,?,?,?)";
+        jdbcTemplate.update(
+            sql,
             piloto.getNome(),
-            piloto.getNacionalidade(), 
+            piloto.getNacionalidade(),
             piloto.getIdade(),
             piloto.getNumeroCarro(),
             piloto.getHabilidade(),
             piloto.getConsistencia(),
             0,
-            piloto.getEquipeId() == 0 ? null : piloto.getEquipeId()
+            piloto.getEquipeId() == 0 ? null : piloto.getEquipeId(),
+            piloto.isBloqueado()
         );
     }
 
@@ -74,14 +75,11 @@ public class PilotoDAO {
         return Piloto.converterRegistros(jdbcTemplate.queryForMap(sql, id));
     }
 
-    // obterTodos — padrão idêntico ao obterTodosClientes()
+    //CORREÇÃO: Ordernar por pontuação para mostrar na classificação do campeonato
     public List<Piloto> obterTodos() {
-        String sql = "SELECT * FROM piloto ORDER BY nome";
-
+        String sql = "SELECT * FROM piloto ORDER BY pontos_campeonato DESC, nome ASC";
         List<Map<String,Object>> listaRegistros = jdbcTemplate.queryForList(sql);
-
         ArrayList<Piloto> arrayListAuxiliar = new ArrayList<>();
-
         for (Map<String,Object> registro : listaRegistros) {
             arrayListAuxiliar.add(Piloto.converterRegistros(registro));
         }

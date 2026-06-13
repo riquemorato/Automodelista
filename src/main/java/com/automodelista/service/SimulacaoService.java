@@ -8,7 +8,9 @@ package com.automodelista.service;
 //COMO FUNCIONA A SIMULAÇÃO: 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import com.automodelista.model.Carro;
 import com.automodelista.model.Corrida;
 import com.automodelista.model.FatorSimulacao;
 import com.automodelista.model.ParticipacaoCorrida;
+import com.automodelista.model.Piloto;
 import com.automodelista.model.ResultadoCorridaRecord;
 import com.automodelista.model.abstracts.EstrategiaAbstract;
 import com.automodelista.model.enums.StatusCorrida;
@@ -71,15 +74,16 @@ public class SimulacaoService {
     private record DadosDesempenho(ParticipacaoCorrida participacao, FatorSimulacao fatorDesempenho, boolean abandonou) {}
 
     //Método Orchestrador
-    public List<ResultadoCorridaRecord> simularCorrida(int corridaId, int equipeId) {
+    public List<ResultadoCorridaRecord> simularCorrida(int corridaId) {
+        
         //Chamando os métodos em sequencia:
         validarCorrida(corridaId);
 
         List<ParticipacaoCorrida> participantes = listarPilotosParticipantes(corridaId);
 
-        Carro carro = carroDaEquipeLoader(equipeId);
+        Map<Integer, Carro> carrosPorEquipe = carregarCarrosPorEquipe(participantes);
 
-        List<DadosDesempenho> listaDesempenho = calcularDesempenho(participantes, carro);
+        List<DadosDesempenho> listaDesempenho = calcularDesempenho(participantes, carrosPorEquipe);
         ordenarPorDesempenho(listaDesempenho);
 
         List<ResultadoCorridaRecord> resultados = calcularResultado(listaDesempenho);
@@ -87,7 +91,7 @@ public class SimulacaoService {
 
         corridaDAO.atualizarStatus(corridaId, StatusCorrida.FINALIZADA.name());
         return resultados;
-    }
+    } 
 
     //MÉTODOS AUXILIARES PARA SIMULAR A CORRIDA.
 
@@ -96,7 +100,6 @@ public class SimulacaoService {
         
         Corrida corrida = corridaDAO.obterPorId(corridaId);
         
-        //TODO: Corrigir esse problema
         if(corrida.getStatus() == StatusCorrida.FINALIZADA) {
             throw new IllegalStateException("Corrida já foi simulada ou finalizada.");
         }
@@ -120,29 +123,47 @@ public class SimulacaoService {
         return participantesCorrida;
     }
 
-    // Carregar o carro da equipe que será simulada
-    private Carro carroDaEquipeLoader(int equipeId){
-        Carro carro = carroDAO.obterPorEquipe(equipeId);
-        
-        //Se a equipe não tiver um carro, throws exception
-        if(carro == null){
-             throw new IllegalStateException("Equipe não possui carro cadastrado.");
+    // Carrega o carro de CADA equipe envolvida na corrida, uma única vez por equipe.
+    private Map<Integer, Carro> carregarCarrosPorEquipe(List<ParticipacaoCorrida> participantesCorrida) {
+        Map<Integer, Carro> carrosPorEquipe = new HashMap<>();
+
+        for (ParticipacaoCorrida participante : participantesCorrida) {
+            int equipeId = participante.getPiloto().getEquipeId();
+
+            // Já buscamos o carro dessa equipe antes (ex: 2 pilotos do mesmo time)? Não busca de novo.
+            if (carrosPorEquipe.containsKey(equipeId)) {
+                continue;
+            }
+
+            Carro carro = carroDAO.obterPorEquipe(equipeId);
+
+            //Se a equipe não tiver um carro, throws exception
+            if (carro == null) {
+                throw new IllegalStateException(
+                    "A equipe de " + participante.getPiloto().getNome() + " não possui carro cadastrado.");
+            }
+
+            carrosPorEquipe.put(equipeId, carro);
         }
 
-        return carro;
+        return carrosPorEquipe;
     }
 
     //Calcular o score de desempenho da corrida para cada piloto cadastrado + sorteio de falha mecanica
-    private List<DadosDesempenho> calcularDesempenho(List<ParticipacaoCorrida> participantesCorrida, Carro carro){
+    private List<DadosDesempenho> calcularDesempenho(List<ParticipacaoCorrida> participantesCorrida, Map<Integer, Carro> carrosPorEquipe){
         List<DadosDesempenho> desempenhoPilotos = new ArrayList<>();
 
-        //para cada piloto participante na lista, obtem-se a estratégia que será utilizada, o score total de simulacao e se ele sofrerá DNF ou não
+        //para cada piloto participante na lista, obtem-se a estratégia, o carro da SUA equipe,
+        //o score total de simulacao e se ele sofrerá DNF ou não
         for(ParticipacaoCorrida participante : participantesCorrida) {
+            Piloto piloto = participante.getPiloto();
+            Carro carroDoPiloto = carrosPorEquipe.get(piloto.getEquipeId());
+
             EstrategiaAbstract estrategia = EstrategiaAbstract.criar(participante.getTipoEstrategia());
-            FatorSimulacao fatorDesempenho = FatorSimulacao.calcular(participante.getPiloto(), carro, estrategia);
+            FatorSimulacao fatorDesempenho = FatorSimulacao.calcular(piloto, carroDoPiloto, estrategia);
 
             boolean isDnf = randomDNF(estrategia);
-            desempenhoPilotos.add(new DadosDesempenho(participante,  fatorDesempenho, isDnf));
+            desempenhoPilotos.add(new DadosDesempenho(participante, fatorDesempenho, isDnf));
         }
 
         return desempenhoPilotos;
@@ -212,7 +233,7 @@ public class SimulacaoService {
     }
 
     //Salva os resultados, posicao, pontuacao e atualiza o campeonato
-    // Passo 7: grava posição, pontos e atualiza o campeonato
+    // Passo final: grava posição, pontos e atualiza o campeonato
     private void salvarResultados(List<ResultadoCorridaRecord> resultados, List<DadosDesempenho> fichas) {
         
         //Para cada resultado armazenado na lista recebida
