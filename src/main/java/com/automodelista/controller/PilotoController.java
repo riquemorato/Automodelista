@@ -6,7 +6,9 @@
 package com.automodelista.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -38,9 +40,18 @@ public class PilotoController {
     //context com DB
     @Autowired ApplicationContext context;
 
-    @GetMapping //Mapeamento HTTP GET
+    @GetMapping
     public String listar(Model model) {
-        model.addAttribute("pilotos", context.getBean(PilotoService.class).obterTodos());
+        List<Piloto> pilotos = context.getBean(PilotoService.class).obterTodos();
+
+        Map<Integer, String> equipeNomes = new HashMap<>();
+        
+        for (Equipe e : context.getBean(EquipeService.class).obterTodas()) {
+        equipeNomes.put(e.getId(), e.getNome());
+        }
+
+        model.addAttribute("pilotos", pilotos);
+        model.addAttribute("equipeNomes", equipeNomes);
         return "piloto/lista";
     }
 
@@ -83,4 +94,6 @@ public class PilotoController {
         context.getBean(PilotoService.class).atualizar(id, piloto);
         return "redirect:/pilotos";
     }
+
+    
 }

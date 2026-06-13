@@ -1,47 +1,72 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title th:text="${corrida.nome}">Corrida</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"></head>
-<body class="bg-light"><div class="container py-4">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${corrida.nome} + ' — Automodelista'">Corrida</title>
+  <th:block th:replace="~{fragments/layout :: head-assets}"></th:block>
+</head>
+<body>
 
-  <div class="d-flex align-items-center gap-3 mb-1">
-    <h2 class="mb-0" th:text="${corrida.nome}"></h2>
-    <span class="badge fs-6"
-      th:classappend="${corrida.status.name() == 'FINALIZADA'} ? 'bg-success' : (${corrida.status.name() == 'EM_ANDAMENTO'} ? 'bg-warning text-dark' : 'bg-secondary')"
-      th:text="${corrida.status.descricao}"></span>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<th:block th:replace="~{fragments/layout :: sidebar}"></th:block>
+
+<main class="main">
+
+  <div class="page-header">
+    <div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <h1 class="page-title mb-0" th:text="${corrida.nome}"></h1>
+        <span class="badge"
+          th:classappend="${corrida.status.name() == 'FINALIZADA'} ? 'bg-success' : (${corrida.status.name() == 'EM_ANDAMENTO'} ? 'bg-warning' : 'bg-secondary')"
+          th:text="${corrida.status.descricao}"></span>
+      </div>
+      <p class="page-subtitle">
+        Circuito: <strong th:text="${corrida.circuito}"></strong>
+        &nbsp;·&nbsp; Rodada <strong th:text="${corrida.rodada}"></strong>
+      </p>
+    </div>
   </div>
-  <p class="text-muted mb-4">
-    Circuito: <strong th:text="${corrida.circuito}"></strong> &nbsp;|&nbsp;
-    Rodada: <strong th:text="${corrida.rodada}"></strong>
-  </p>
 
-  <div class="row g-4">
+  <div class="corrida-grid">
+
     <!-- Pilotos inscritos -->
-    <div class="col-md-6">
-      <div class="card shadow-sm mb-3">
-        <div class="card-header"><strong>Pilotos Inscritos</strong></div>
+    <div class="card card--scroll-lg">
+      <div class="card-header">
+        Pilotos Inscritos
+        <span class="text-muted">(<span th:text="${#lists.size(participacoes)}"></span>)</span>
+      </div>
+      <div class="card-body scroll-y">
         <table class="table table-sm mb-0">
-          <thead class="table-light"><tr><th>Piloto</th><th>Estratégia</th><th>Pneu</th><th>Pos.</th></tr></thead>
+          <thead>
+            <tr><th>Piloto</th><th>Estratégia</th><th>Pneu</th><th>Pos.</th></tr>
+          </thead>
           <tbody>
             <tr th:each="p : ${participacoes}">
               <td th:text="${p.getPiloto() != null} ? ${p.getPiloto().getNome()} : '#' + ${p.getPilotoId()}"></td>
               <td th:text="${p.tipoEstrategia}"></td>
-              <td th:text="${p.compoundPneu}"></td>
+              <td>
+                <span class="tyre"
+                  th:classappend="${p.compoundPneu == 'MACIO'} ? 'tyre--macio' : (${p.compoundPneu == 'MEDIO'} ? 'tyre--medio' : 'tyre--duro')"></span>
+                <span th:text="${p.compoundPneu}"></span>
+              </td>
               <td>
                 <span th:if="${p.posicaoFinal > 0}" class="badge bg-secondary" th:text="'P' + ${p.posicaoFinal}"></span>
                 <span th:unless="${p.posicaoFinal > 0}" class="text-muted">—</span>
               </td>
             </tr>
             <tr th:if="${#lists.isEmpty(participacoes)}">
-              <td colspan="4" class="text-muted text-center">Nenhum piloto inscrito.</td>
+              <td colspan="4" class="text-muted text-center py-3">Nenhum piloto inscrito.</td>
             </tr>
           </tbody>
         </table>
       </div>
+    </div>
 
-      <!-- Form inscrição -->
-      <div class="card shadow-sm" th:unless="${corrida.status.name() == 'FINALIZADA'}">
-        <div class="card-header"><strong>Inscrever Piloto</strong></div>
+    <!-- Coluna lateral: inscrição + simulação -->
+    <div class="corrida-side">
+
+      <div class="card" th:unless="${corrida.status.name() == 'FINALIZADA'}">
+        <div class="card-header">Inscrever Piloto</div>
         <div class="card-body">
           <form th:action="@{/corridas/{id}/inscrever(id=${corrida.id})}" method="post">
             <div class="mb-2">
@@ -69,30 +94,47 @@
                 </select>
               </div>
             </div>
-            <button type="submit" class="btn btn-outline-primary w-100">Inscrever</button>
+            <button type="submit" class="btn btn-outline-secondary w-100">Inscrever</button>
           </form>
         </div>
       </div>
-    </div>
 
-    <!-- Simulação -->
-    <div class="col-md-6">
-    <div class="card shadow-sm border-danger" th:unless="${corrida.status.name() == 'FINALIZADA'}">
-      <div class="card-header bg-danger text-white"><strong>🏁 Simular Corrida</strong></div>
+      <div class="card card--accent" th:unless="${corrida.status.name() == 'FINALIZADA'}">
+        <div class="card-header" style="color:#ff6b5e">🏁 Simular Corrida</div>
         <div class="card-body">
-          <p class="card-text text-muted small mb-3">
-          Cada piloto inscrito usa o carro da própria equipe na simulação.
+          <p class="text-muted small mb-3">
+            Cada piloto inscrito usa o carro da própria equipe na simulação.
           </p>
-            <form th:action="@{/corridas/{id}/simular(id=${corrida.id})}" method="post">
-              <button type="submit" class="btn btn-danger w-100">Simular Corrida</button>
-            </form>
-          </div>
+          <form id="form-simular" th:action="@{/corridas/{id}/simular(id=${corrida.id})}" method="post">
+            <button type="submit" id="btn-simular" class="btn btn-danger w-100">Simular Corrida</button>
+          </form>
         </div>
-      <div class="alert alert-success" th:if="${corrida.status.name() == 'FINALIZADA'}">
-        ✅ Corrida finalizada. Veja os resultados na lista de inscritos.
       </div>
+
+      <div class="alert alert-success" th:if="${corrida.status.name() == 'FINALIZADA'}">
+        ✅ Corrida finalizada — confira o resultado na tabela ao lado.
+      </div>
+
     </div>
   </div>
 
-  <a th:href="@{/campeonatos}" class="btn btn-link btn-sm mt-3">← Campeonatos</a>
-</div></body></html>
+</main>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+
+<script th:if="${corrida.status.name() != 'FINALIZADA'}">
+  (function () {
+    var form = document.getElementById('form-simular');
+    var btn  = document.getElementById('btn-simular');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      btn.classList.add('btn-loading');
+      btn.innerHTML = '<span class="btn-loading__spinner"></span>Simulando corrida...';
+      setTimeout(function () { form.submit(); }, 2000);
+    });
+  })();
+</script>
+
+</body>
+</html>

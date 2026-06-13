@@ -6,12 +6,16 @@
 package com.automodelista.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.automodelista.dao.EquipeDAO;
 import com.automodelista.dao.PilotoDAO;
+import com.automodelista.model.Equipe;
 import com.automodelista.model.Piloto;
 import com.automodelista.model.PosicaoCampeonatoRecord;
 
@@ -25,6 +29,7 @@ import com.automodelista.model.PosicaoCampeonatoRecord;
 @Service
 public class PilotoService {
     @Autowired PilotoDAO pilotoDAO;
+    @Autowired EquipeDAO equipeDAO;
 
     //POST - Insere um piloto novo
     public void inserir(Piloto piloto){
@@ -57,18 +62,25 @@ public class PilotoService {
     }
 
     //OBTEM POSICAO NO CAMPEONATO
-        public List<PosicaoCampeonatoRecord> gapParaLider() {
+    public List<PosicaoCampeonatoRecord> gapParaLider() {
         List<Piloto> pilotos = pilotoDAO.obterTodos();
         int liderPts = pilotos.isEmpty() ? 0 : pilotos.get(0).getPontosCampeonato();
+
+        Map<Integer, String> equipeNomes = new HashMap<>();
+        for (Equipe equipe : equipeDAO.obterTodos()) {
+            equipeNomes.put(equipe.getId(), equipe.getNome());
+        }
+
         List<PosicaoCampeonatoRecord> standings = new ArrayList<>();
         for (int i = 0; i < pilotos.size(); i++) {
-            Piloto p = pilotos.get(i);
+            Piloto piloto = pilotos.get(i);
+            String nomeEquipe = equipeNomes.getOrDefault(piloto.getEquipeId(), "—");
             standings.add(new PosicaoCampeonatoRecord(
-                i + 1, p.getNome(), "—",
-                p.getPontosCampeonato(), liderPts - p.getPontosCampeonato()));
+                i + 1, piloto.getNome(), nomeEquipe,
+                piloto.getPontosCampeonato(), liderPts - piloto.getPontosCampeonato()));
         }
+
         return standings;
     }
-
 }
 
