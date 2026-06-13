@@ -39,10 +39,17 @@ public class EquipeController {
         return "equipe/form";
     }
 
+    //IMPLEMENTAÇÃO - Filtro de registro duplicado. 
     @PostMapping("/nova")
-    public String salvar(@ModelAttribute Equipe equipe) {
-        context.getBean(EquipeService.class).inserir(equipe);
-        return "redirect:/equipes";
+    public String salvar(@ModelAttribute Equipe equipe, Model model) {
+        try {
+            context.getBean(EquipeService.class).inserir(equipe);
+            return "redirect:/equipes";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("erro", e.getMessage());
+            model.addAttribute("equipe", equipe);
+            return "equipe/form";
+        }
     }
 
     @GetMapping("/{id}/editar")
@@ -53,8 +60,15 @@ public class EquipeController {
     }
 
     @PostMapping("/{id}/editar")
-    public String atualizar(@PathVariable int id, @ModelAttribute Equipe equipe) {
-        context.getBean(EquipeService.class).atualizar(id, equipe);
-        return "redirect:/equipes";
+    public String atualizar(@PathVariable int id, @ModelAttribute Equipe equipe, Model model) {
+        try {
+            context.getBean(EquipeService.class).atualizar(id, equipe);
+            return "redirect:/equipes";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("erro", e.getMessage());
+            model.addAttribute("equipe", equipe);
+            model.addAttribute("id", id);
+            return "equipe/form-editar";
+        }
     }
 }

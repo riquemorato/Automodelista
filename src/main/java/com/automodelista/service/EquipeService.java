@@ -26,10 +26,13 @@ public class EquipeService {
     @Autowired EquipeDAO equipeDAO;
     @Autowired CarroDAO  carroDAO;
 
-    //POST - Insere uma nova equipe
+    //POST - Insere uma nova equipe - ATUALIZADO - FILTRO DE DUPLICIDADE - valida antes de efetivar o cadastro
     public void inserir(Equipe equipe){
+        if (equipeDAO.existePorNome(equipe.getNome())) {
+            throw new IllegalArgumentException("Já existe uma equipe cadastrada com o nome \"" + equipe.getNome() + "\".");
+        }
         int id = equipeDAO.inserir(equipe);
-        
+
         Carro carro = new Carro(equipe.getNome() + " — Carro", id);
         carroDAO.inserir(carro);
     }
@@ -44,9 +47,12 @@ public class EquipeService {
         return equipeDAO.obterTodos();
     }
 
-    //UPDATE - atualiza uma equipe por ID
-    public void atualizar(int id, Equipe e){
-        equipeDAO.atualizar(id, e);
+    //UPDATE - atualiza uma equipe por ID - ATUALIZADO - FILTRO DE DUPLICIDADE - valida antes de efetivar o cadastro
+    public void atualizar(int id, Equipe equipe){
+        if (equipeDAO.existePorNome(equipe.getNome(), id)) {
+            throw new IllegalArgumentException("Já existe uma equipe cadastrada com o nome \"" + equipe.getNome() + "\".");
+        }
+        equipeDAO.atualizar(id, equipe);
     }
 
     //DELETE - Deleta uma equipe por ID

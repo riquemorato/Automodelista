@@ -95,5 +95,21 @@ public class PilotoDAO {
         return lista;
     }
 
-    public void deletar(int id) { jdbcTemplate.update("DELETE FROM piloto WHERE id=?", id); }
+    public void deletar(int id){
+        jdbcTemplate.update("DELETE FROM piloto WHERE id=?", id);
+    }
+
+    //FILTRO DE DUPLICIDADE => impede dois registros iguais de serem cadastrados
+    public boolean existePorNome(String nome) {
+        String sql = "SELECT COUNT(*) FROM piloto WHERE LOWER(TRIM(nome)) = LOWER(TRIM(?))";
+        Integer total = jdbcTemplate.queryForObject(sql, Integer.class, nome);
+        return total != null && total > 0;
+    }
+
+    public boolean existePorNome(String nome, int excluirId) {
+        String sql = "SELECT COUNT(*) FROM piloto WHERE LOWER(TRIM(nome)) = LOWER(TRIM(?)) AND id <> ?";
+        Integer total = jdbcTemplate.queryForObject(sql, Integer.class, nome, excluirId);
+        return total != null && total > 0;
+    }
 }
+

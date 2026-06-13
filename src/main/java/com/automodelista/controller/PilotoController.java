@@ -46,8 +46,8 @@ public class PilotoController {
 
         Map<Integer, String> equipeNomes = new HashMap<>();
         
-        for (Equipe e : context.getBean(EquipeService.class).obterTodas()) {
-        equipeNomes.put(e.getId(), e.getNome());
+        for (Equipe equipe : context.getBean(EquipeService.class).obterTodas()) {
+        equipeNomes.put(equipe.getId(), equipe.getNome());
         }
 
         model.addAttribute("pilotos", pilotos);
@@ -58,19 +58,23 @@ public class PilotoController {
     @GetMapping("/novo")
     public String formulario(Model model) {
         model.addAttribute("piloto", new Piloto());
-
-        List<Equipe> disponiveis = new ArrayList<>();
-        for (Equipe equipe : context.getBean(EquipeService.class).obterTodas()) {
-        if (!equipe.isBloqueada()) disponiveis.add(equipe);
-        }
-        model.addAttribute("equipes", disponiveis);
+        adicionarEquipesDisponiveis(model);
         return "piloto/form";
     }
 
-    @PostMapping("/novo") //Mapeamento HTTP POST
-    public String salvar(@ModelAttribute Piloto piloto) {
-        context.getBean(PilotoService.class).inserir(piloto);
-        return "redirect:/pilotos";
+
+    //Método POST atualizado com validação de duplicidade
+    @PostMapping("/novo")
+    public String salvar(@ModelAttribute Piloto piloto, Model model) {
+        try {
+            context.getBean(PilotoService.class).inserir(piloto);
+            return "redirect:/pilotos";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("erro", e.getMessage());
+            model.addAttribute("piloto", piloto);
+            adicionarEquipesDisponiveis(model);
+            return "piloto/form";
+        }
     }
 
     @GetMapping("/{id}/editar")
@@ -93,6 +97,15 @@ public class PilotoController {
     public String atualizar(@PathVariable int id, @ModelAttribute Piloto piloto) {
         context.getBean(PilotoService.class).atualizar(id, piloto);
         return "redirect:/pilotos";
+    }
+
+    // Monta a lista de equipes não-bloqueadas, usada nos 4 retornos de formulário acima
+    private void adicionarEquipesDisponiveis(Model model) {
+        List<Equipe> disponiveis = new ArrayList<>();
+        for (Equipe equipe : context.getBean(EquipeService.class).obterTodas()) {
+            if (!equipe.isBloqueada()) disponiveis.add(equipe);
+        }
+        model.addAttribute("equipes", disponiveis);
     }
 
     

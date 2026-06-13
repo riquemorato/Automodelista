@@ -31,8 +31,11 @@ public class PilotoService {
     @Autowired PilotoDAO pilotoDAO;
     @Autowired EquipeDAO equipeDAO;
 
-    //POST - Insere um piloto novo
+    //ATUALIZADO - FILTRO DE DUPLICIDADE - valida antes de efetivar o cadastro
     public void inserir(Piloto piloto){
+        if (pilotoDAO.existePorNome(piloto.getNome())) {
+            throw new IllegalArgumentException("Já existe um piloto cadastrado com o nome \"" + piloto.getNome() + "\".");
+        }
         pilotoDAO.inserir(piloto);
     }
 
@@ -51,9 +54,12 @@ public class PilotoService {
         return pilotoDAO.obterPorEquipe(id);
     }
 
-    //UPDATE - atualiza os dados de um piloto via ID
-    public void atualizar(int id, Piloto p){
-        pilotoDAO.atualizar(id, p);
+    //UPDATE - atualiza os dados de um piloto via ID - ATUALIZADO: FILTRO DE DUPLICIDADE - valida antes de efetivar o cadastro
+    public void atualizar(int id, Piloto piloto){
+        if (pilotoDAO.existePorNome(piloto.getNome(), id)) {
+            throw new IllegalArgumentException( "Já existe um piloto cadastrado com o nome \"" + piloto.getNome() + "\".");
+        }
+        pilotoDAO.atualizar(id, piloto);
     }
 
     //DELETE - deleta um piloto via ID
@@ -82,5 +88,7 @@ public class PilotoService {
 
         return standings;
     }
+
+    
 }
 
