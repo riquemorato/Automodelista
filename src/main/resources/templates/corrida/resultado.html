@@ -26,14 +26,18 @@
           <tr><th>Pos</th><th>Piloto</th><th class="num">Score</th><th class="num">Pontos</th><th>Status</th></tr>
         </thead>
         <tbody>
-          <tr th:each="r : ${resultados}" th:classappend="${r.foiPodio()} ? 'row-podio' : ''">
+          <tr th:each="r : ${resultados}"
+              th:classappend="${(r.foiPodio() ? 'row-podio ' : '') + (!r.piloto().bloqueado ? 'row-piloto-usuario' : '')}">
             <td class="num">
               <span th:if="${r.posicao() == 1}">🥇</span>
               <span th:if="${r.posicao() == 2}">🥈</span>
               <span th:if="${r.posicao() == 3}">🥉</span>
               <strong th:text="'P' + ${r.posicao()}"></strong>
             </td>
-            <td th:text="${r.piloto().getNome()}"></td>
+            <td>
+              <span th:text="${r.piloto().getNome()}"></span>
+              <span th:unless="${r.piloto().bloqueado}" class="badge badge--user">Seu piloto</span>
+            </td>
             <td class="num" th:text="${r.score()}"></td>
             <td class="num">
               <strong class="text-success" th:if="${r.pontuou()}" th:text="${r.pontosObtidos()}"></strong>

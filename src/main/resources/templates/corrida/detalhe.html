@@ -9,6 +9,8 @@
 
 <header th:replace="~{fragments/layout :: topbar}"></header>
 <th:block th:replace="~{fragments/layout :: sidebar}"></th:block>
+<div th:replace="~{fragments/layout :: toast-container}"></div>
+<div th:if="${mensagem}" id="toast-trigger" th:attr="data-message=${mensagem}" style="display:none"></div>
 
 <main class="main">
 
@@ -41,19 +43,23 @@
             <tr><th>Piloto</th><th>Estratégia</th><th>Pneu</th><th>Pos.</th></tr>
           </thead>
           <tbody>
-            <tr th:each="p : ${participacoes}">
-              <td th:text="${p.getPiloto() != null} ? ${p.getPiloto().getNome()} : '#' + ${p.getPilotoId()}"></td>
+            <tr th:each="p : ${participacoes}"
+              th:classappend="${p.getPiloto() != null and !p.getPiloto().bloqueado} ? 'row-piloto-usuario' : ''">
+            <td>
+            <span th:text="${p.getPiloto() != null} ? ${p.getPiloto().getNome()} : '#' + ${p.getPilotoId()}"></span>
+            <span th:if="${p.getPiloto() != null and !p.getPiloto().bloqueado}" class="badge badge--user">Seu piloto</span>
+            </td>
               <td th:text="${p.tipoEstrategia}"></td>
-              <td>
-                <span class="tyre"
-                  th:classappend="${p.compoundPneu == 'MACIO'} ? 'tyre--macio' : (${p.compoundPneu == 'MEDIO'} ? 'tyre--medio' : 'tyre--duro')"></span>
-                <span th:text="${p.compoundPneu}"></span>
-              </td>
-              <td>
-                <span th:if="${p.posicaoFinal > 0}" class="badge bg-secondary" th:text="'P' + ${p.posicaoFinal}"></span>
-                <span th:unless="${p.posicaoFinal > 0}" class="text-muted">—</span>
-              </td>
-            </tr>
+            <td>
+            <span class="tyre"
+            th:classappend="${p.compoundPneu == 'MACIO'} ? 'tyre--macio' : (${p.compoundPneu == 'MEDIO'} ? 'tyre--medio' : 'tyre--duro')"></span>
+            <span th:text="${p.compoundPneu}"></span>
+            </td>
+            <td>
+            <span th:if="${p.posicaoFinal > 0}" class="badge bg-secondary" th:text="'P' + ${p.posicaoFinal}"></span>
+            <span th:unless="${p.posicaoFinal > 0}" class="text-muted">—</span>
+            </td>
+          </tr>
             <tr th:if="${#lists.isEmpty(participacoes)}">
               <td colspan="4" class="text-muted text-center py-3">Nenhum piloto inscrito.</td>
             </tr>

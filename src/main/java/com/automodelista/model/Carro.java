@@ -18,10 +18,10 @@ public class Carro {
     private int equipeId;
     
     //Inicializados com valor default = 1. Esse valor muda de acordo com orçamento da equipe e o calculo da performance
-    private int nivelMotor = 1;
-    private int nivelAero = 1;
-    private int nivelTransmissao = 1;
-    private int nivelSuspensao = 1;
+    private int nivelMotor = 4;
+    private int nivelAero = 4;
+    private int nivelTransmissao = 3;
+    private int nivelSuspensao = 4;
 
     //Constructors
     public Carro(){

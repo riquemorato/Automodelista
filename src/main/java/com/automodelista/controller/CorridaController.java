@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.automodelista.model.ParticipacaoCorrida;
 import com.automodelista.model.Piloto;
@@ -68,8 +69,10 @@ public class CorridaController {
         @PathVariable int id,
         @RequestParam int pilotoId,
         @RequestParam String tipoEstrategia,
-        @RequestParam String compoundPneu) {
+        @RequestParam String compoundPneu,
+        RedirectAttributes redirectAttributes) {
             context.getBean(CorridaService.class).inscreverPiloto(pilotoId, id, tipoEstrategia, compoundPneu);
+            redirectAttributes.addFlashAttribute("mensagem", "Piloto inscrito com sucesso!");
             return "redirect:/corridas/" + id;
     }
 
