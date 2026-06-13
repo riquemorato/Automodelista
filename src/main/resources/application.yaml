@@ -1,12 +1,18 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5432/automodelista
-    username: postgres
-    password: root
-    driver-class-name: org.postgresql.Driver
+    platform: postgres
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driverClassName: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
   sql:
     init:
       mode: always
