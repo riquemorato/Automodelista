@@ -38,30 +38,31 @@
         <span class="text-muted">(<span th:text="${#lists.size(participacoes)}"></span>)</span>
       </div>
       <div class="card-body scroll-y">
-        <table class="table table-sm mb-0">
+         <table class="table table-sm mb-0">
           <thead>
-            <tr><th>Piloto</th><th>Estratégia</th><th>Pneu</th><th>Pos.</th></tr>
+            <tr><th>Piloto</th><th>Equipe</th><th>Estratégia</th><th>Pneu</th><th>Pos.</th></tr>
           </thead>
           <tbody>
             <tr th:each="p : ${participacoes}"
-              th:classappend="${p.getPiloto() != null and !p.getPiloto().bloqueado} ? 'row-piloto-usuario' : ''">
-            <td>
-            <span th:text="${p.getPiloto() != null} ? ${p.getPiloto().getNome()} : '#' + ${p.getPilotoId()}"></span>
-            <span th:if="${p.getPiloto() != null and !p.getPiloto().bloqueado}" class="badge badge--user">Seu piloto</span>
-            </td>
+                th:classappend="${p.getPiloto() != null and !p.getPiloto().bloqueado} ? 'row-piloto-usuario' : ''">
+              <td>
+                <span th:text="${p.getPiloto() != null} ? ${p.getPiloto().getNome()} : '#' + ${p.getPilotoId()}"></span>
+                <span th:if="${p.getPiloto() != null and !p.getPiloto().bloqueado}" class="badge badge--user">Seu piloto</span>
+              </td>
+              <td class="text-muted" th:text="${p.getPiloto() != null} ? ${equipeNomes.getOrDefault(p.getPiloto().getEquipeId(), '—')} : '—'"></td>
               <td th:text="${p.tipoEstrategia}"></td>
-            <td>
-            <span class="tyre"
-            th:classappend="${p.compoundPneu == 'MACIO'} ? 'tyre--macio' : (${p.compoundPneu == 'MEDIO'} ? 'tyre--medio' : 'tyre--duro')"></span>
-            <span th:text="${p.compoundPneu}"></span>
-            </td>
-            <td>
-            <span th:if="${p.posicaoFinal > 0}" class="badge bg-secondary" th:text="'P' + ${p.posicaoFinal}"></span>
-            <span th:unless="${p.posicaoFinal > 0}" class="text-muted">—</span>
-            </td>
-          </tr>
+              <td>
+                <span class="tyre"
+          th:classappend="${p.compoundPneu == 'MACIO'} ? 'tyre--macio' : (${p.compoundPneu == 'MEDIO'} ? 'tyre--medio' : 'tyre--duro')"></span>
+                <span th:text="${p.compoundPneu}"></span>
+              </td>
+              <td>
+                <span th:if="${p.posicaoFinal > 0}" class="badge bg-secondary" th:text="'P' + ${p.posicaoFinal}"></span>
+                <span th:unless="${p.posicaoFinal > 0}" class="text-muted">—</span>
+              </td>
+            </tr>
             <tr th:if="${#lists.isEmpty(participacoes)}">
-              <td colspan="4" class="text-muted text-center py-3">Nenhum piloto inscrito.</td>
+              <td colspan="5" class="text-muted text-center py-3">Nenhum piloto inscrito.</td>
             </tr>
           </tbody>
         </table>
@@ -72,38 +73,51 @@
     <div class="corrida-side">
 
       <div class="card" th:unless="${corrida.status.name() == 'FINALIZADA'}">
-        <div class="card-header">Inscrever Piloto</div>
-        <div class="card-body">
-          <form th:action="@{/corridas/{id}/inscrever(id=${corrida.id})}" method="post">
-            <div class="mb-2">
-              <label class="form-label">Piloto</label>
-              <select name="pilotoId" class="form-select" required>
-                <option value="">Selecione...</option>
-                <option th:each="p : ${pilotos}" th:value="${p.id}" th:text="${p.numeroCarro + ' — ' + p.nome}"></option>
-              </select>
-            </div>
-            <div class="row g-2 mb-3">
-              <div class="col-6">
-                <label class="form-label">Estratégia</label>
-                <select name="tipoEstrategia" class="form-select">
-                  <option value="CONSERVADORA">Conservadora</option>
-                  <option value="BALANCEADA" selected>Balanceada</option>
-                  <option value="AGRESSIVA">Agressiva</option>
-                </select>
-              </div>
-              <div class="col-6">
-                <label class="form-label">Composto</label>
-                <select name="compoundPneu" class="form-select">
-                  <option value="MACIO">Macio 🔴</option>
-                  <option value="MEDIO" selected>Médio 🟡</option>
-                  <option value="DURO">Duro ⚪</option>
-                </select>
-              </div>
-            </div>
-            <button type="submit" class="btn btn-outline-secondary w-100">Inscrever</button>
-          </form>
-        </div>
+  <div class="card-header">Inscrever Piloto</div>
+  <div class="card-body">
+    <form th:action="@{/corridas/{id}/inscrever(id=${corrida.id})}" method="post">
+
+      <div class="mb-2">
+        <label class="form-label">Equipe</label>
+        <select id="select-equipe" class="form-select">
+          <option value="">Selecione...</option>
+          <option th:each="entry : ${equipesDisponiveis}" th:value="${entry.key}" th:text="${entry.value}"></option>
+        </select>
       </div>
+
+      <div class="mb-2">
+        <label class="form-label">Piloto</label>
+        <select name="pilotoId" id="select-piloto" class="form-select" required>
+          <option value="">Selecione uma equipe primeiro...</option>
+          <option th:each="p : ${pilotos}" th:value="${p.id}" th:attr="data-equipe=${p.equipeId}"
+                  th:text="${p.numeroCarro + ' — ' + p.nome}" hidden disabled></option>
+        </select>
+        <div class="form-text text-muted">Pilotos sem equipe não aparecem aqui — edite o cadastro para vincular uma equipe.</div>
+      </div>
+
+      <div class="row g-2 mb-3">
+        <div class="col-6">
+          <label class="form-label">Estratégia</label>
+          <select name="tipoEstrategia" class="form-select">
+              <option value="CONSERVADORA">Conservadora</option>
+              <option value="BALANCEADA" selected>Balanceada</option>
+              <option value="AGRESSIVA">Agressiva</option>
+            </select>
+        </div>
+        <div class="col-6">
+          <label class="form-label">Composto</label>
+            <select name="compoundPneu" class="form-select">
+              <option value="MACIO">Macio 🔴</option>
+              <option value="MEDIO" selected>Médio 🟡</option>
+              <option value="DURO">Duro ⚪</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-outline-secondary w-100">Inscrever</button>
+      </form>
+    </div>
+  </div>
 
       <div class="card card--accent" th:unless="${corrida.status.name() == 'FINALIZADA'}">
         <div class="card-header" style="color:#ff6b5e">🏁 Simular Corrida</div>

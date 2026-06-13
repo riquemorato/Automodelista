@@ -38,3 +38,24 @@ document.addEventListener('DOMContentLoaded', function () {
     showToast(trigger.dataset.message);
   }
 });
+
+// Filtra o select de Piloto conforme a Equipe selecionada (corrida/detalhe)
+document.addEventListener('DOMContentLoaded', function () {
+  var selectEquipe = document.getElementById('select-equipe');
+  var selectPiloto = document.getElementById('select-piloto');
+  if (!selectEquipe || !selectPiloto) return;
+
+  var placeholder = selectPiloto.querySelector('option[value=""]');
+  var opcoesPiloto = Array.from(selectPiloto.querySelectorAll('option[data-equipe]'));
+
+  selectEquipe.addEventListener('change', function () {
+    var equipeId = selectEquipe.value;
+    opcoesPiloto.forEach(function (opt) {
+      var match = opt.getAttribute('data-equipe') === equipeId;
+      opt.hidden = !match;
+      opt.disabled = !match;
+    });
+    placeholder.textContent = equipeId ? 'Selecione...' : 'Selecione uma equipe primeiro...';
+    selectPiloto.value = '';
+  });
+});
