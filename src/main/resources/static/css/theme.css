@@ -574,3 +574,17 @@ a:hover { color: var(--accent); }
   from { transform: translateX(0); opacity: 1; }
   to   { transform: translateX(24px); opacity: 0; }
 }
+
+/* ============================================================
+   ADMIN — Zona de perigo
+   ============================================================ */
+
+.card--danger {
+  border-color: var(--accent);
+}
+.card--danger .card-header {
+  background: var(--accent);
+  color: #fff;
+  border-bottom-color: var(--accent);
+}
+

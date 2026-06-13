@@ -13,13 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.annotation.PostConstruct;
 
+
+// Classe utilitária para limpar os dados inseridos no DB na hora de fazer a demonstração do sistema.
+// Essa classe gera um insert com dados "seed" para piloto, equipe e calendario do campeonato, reduzindo o esforço
+// de inserir um monte de piloto e equipe manualmente
 @Service
 public class DadosSeederService {
 
     @Autowired DataSource dataSource;
     JdbcTemplate jdbcTemplate;
 
-    // DIAGNÓSTICO TEMPORÁRIO — remover depois de confirmar que o reset não entra mais em loop
+    // DEBUG: DIAGNÓSTICO TEMPORÁRIO — remover depois de confirmar que o reset não entra mais em loop
     private int resetCallCount = 0;
     @PostConstruct
     private void init() {
@@ -29,10 +33,7 @@ public class DadosSeederService {
     // Sistema de pontuação oficial da F1 (Top 10)
     private static final int[] PONTOS_RODADA_1 = {25, 18, 15, 12, 10, 8, 6, 4, 2, 1};
 
-    /**
-     * Posição final na rodada 1 por piloto cadastrado (mapeado de 0 a 21 conforme ordem de seed)
-     * Garante posições únicas sem ultrapassar o tamanho da tabela de pontos para os top 10.
-     */
+    //Alimenta a rodada 1 (Já simulada) - Posição final fixa para cada piloto cadastrado
     private static final int[] POSICOES_RODADA_1 = {
         3,  2,  // Ferrari (Leclerc, Hamilton)
         5,  6,  // McLaren (Norris, Piastri)
@@ -47,6 +48,7 @@ public class DadosSeederService {
         21, 22  // Cadillac (Pérez, Bottas)
     };
 
+    //Alimenta as estratégias pré configuradas para a rodada 2 - pilotos seed
     private static final String[] ESTRATEGIAS_RODADA_2 = {
         "AGRESSIVA", "BALANCEADA",   // Ferrari
         "AGRESSIVA", "BALANCEADA",   // McLaren
@@ -61,6 +63,7 @@ public class DadosSeederService {
         "BALANCEADA", "CONSERVADORA" // Cadillac
     };
 
+    //Alimenta os compostos pré configurados para a rodada 2 - pilotos seed
     private static final String[] COMPOSTOS_RODADA_2 = {
         "MACIO", "MEDIO", // Ferrari
         "MACIO", "MEDIO", // McLaren
@@ -75,45 +78,48 @@ public class DadosSeederService {
         "MEDIO", "DURO"   // Cadillac
     };
 
-    /** Roda no startup — só popula se o banco estiver vazio. */
+    //Executa no startup do projeto, e apenas se as tabela de campeonato estiver vazia
     public void popularSeNecessario() {
         Integer total = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM campeonato", Integer.class);
-        if (total != null && total > 0) return;
+        
+        //Se a tabela não estiver vazia, retorna e encerra o método
+        if (total != null && total > 0){
+            return;
+        } 
 
-        System.out.println("\n[SEED] Banco vazio — populando dados da temporada de 2026...\n");
+        System.out.println("\n Banco vazio. Gerando dados seed para a temporada 2026...\n");
         criarEstruturaInicial();
         popularResultadosSeed();
-        System.out.println("[SEED] Concluído — 11 equipes, 22 pilotos, 24 corridas.\n");
+        System.out.println(" Dados gerados: 11 equipes, 22 pilotos, 24 corridas incluidas como seed.\n");
     }
 
-    /** Reset total — apaga TUDO (incluindo dados do usuário) e recria a temporada do zero. */
+    //Reset para apagar todos os dados existentes no banco de dados. Utilizado para resetar a demonstração do sistema.
     @Transactional
     public void resetarDemo() {
         resetCallCount++;
         if (resetCallCount > 3) {
             throw new IllegalStateException(
-                "resetarDemo() chamado " + resetCallCount + " vezes consecutivas — provável loop.",
+                "resetarDemo() chamado " + resetCallCount + " vezes consecutivas. Provavel bug de loop (tinha sido arrumado)",
                 new Exception("Stack trace da chamada que excedeu o limite"));
         }
 
-        System.out.println("\n[RESET] Apagando todos os dados e recriando a temporada do zero... (chamada #" + resetCallCount + ")\n");
+        System.out.println("\nReset para demonstração: Apagando todos os dados e recriando a temporada com valores seed.\n");
 
         jdbcTemplate.update("TRUNCATE TABLE participacao, carro, piloto, corrida, equipe, campeonato RESTART IDENTITY CASCADE");
 
         criarEstruturaInicial();
         popularResultadosSeed();
 
-        System.out.println("[RESET] Concluído — temporada restaurada ao estado inicial.\n");
-
-        resetCallCount = 0; // sucesso — zera o contador para o próximo reset manual
+        System.out.println("Reset concluído com sucesso. Temporada restaurada ao estado inicial. 11 equipes, 22 pilotos e 24 corridas em seed.\n");
     }
 
+    //Insere nas tabelas os seeds: Equipes, Pilotos e Corrida
     private void criarEstruturaInicial() {
-        int campeonatoId = jdbcTemplate.queryForObject(
-            "INSERT INTO campeonato(nome, temporada) VALUES(?,?) RETURNING id",
-            Integer.class, "Fórmula 1 World Championship", 2026);
+        
+        int campeonatoId = jdbcTemplate.queryForObject( "INSERT INTO campeonato(nome, temporada) VALUES(?,?) RETURNING id", Integer.class, "Fórmula 1 World Championship", 2026);
 
         // --- 11 EQUIPES ---
+        // Nome, Orcamento, motor, aero, transmissao, suspensao
         int ferrariId     = seedEquipe("Scuderia Ferrari", 200_000_000, 8, 7, 6, 7);
         int mclarenId     = seedEquipe("McLaren", 200_000_000, 5, 5, 5, 5);
         int audiId        = seedEquipe("Audi", 150_000_000, 3, 4, 3, 3);
@@ -127,6 +133,7 @@ public class DadosSeederService {
         int cadillacId    = seedEquipe("Cadillac Formula 1 Team", 150_000_000, 5, 5, 5, 5);
 
         // --- 22 PILOTOS ---
+        // Nome, Nacionalidade, Idade, Nro Carro, Habilidade, Performance, idEquipe
         seedPiloto("Charles Leclerc", "Mônaco", 27, 16, 88, 85, ferrariId);
         seedPiloto("Lewis Hamilton", "Reino Unido", 41, 44, 84, 80, ferrariId);
 
@@ -161,6 +168,7 @@ public class DadosSeederService {
         seedPiloto("Valtteri Bottas", "Finlândia", 36, 77, 75, 78, cadillacId);
 
         // --- 24 CORRIDAS ---
+        //Nome, Circuito, Rodada, Id do Campeonato
         seedCorrida("GP de Interlagos", "Autódromo José Carlos Pace", 1, campeonatoId);
         seedCorrida("GP de Mônaco", "Circuit de Monaco", 2, campeonatoId);
         seedCorrida("GP de Silverstone", "Silverstone Circuit", 3, campeonatoId);
@@ -188,6 +196,8 @@ public class DadosSeederService {
     }
 
     private void popularResultadosSeed() {
+
+        //Gera uma lista com pilotos id a partir da query
         List<Integer> pilotoIds = jdbcTemplate.queryForList(
             "SELECT id FROM piloto WHERE bloqueado = true ORDER BY id", Integer.class);
         if (pilotoIds.size() < 22) return; 
@@ -199,10 +209,15 @@ public class DadosSeederService {
 
         // Rodada 1 — Resultados Completos (Com proteção para quem não pontuou)
         for (int i = 0; i < 22; i++) {
+            
             int pilotoId = pilotoIds.get(i);
+
+            //Array de posições 
             int posicao  = POSICOES_RODADA_1[i];
+            //Se posicao for maior or igual a 10, há pontuação. Senão, pts = 0;''
             int pontos   = (posicao <= 10) ? PONTOS_RODADA_1[posicao - 1] : 0;
 
+            //Faz um insert na tabela de participacao - piloto cadastrado, corrida que aconteceu, classificacao geral, strat utilizada.
             jdbcTemplate.update(
                 "INSERT INTO participacao(piloto_id, corrida_id, posicao_final, pontos_obtidos, tipo_estrategia, compound_pneu, abandonou) " +
                 "VALUES(?,?,?,?,?,?,false)",
@@ -221,6 +236,7 @@ public class DadosSeederService {
         }
     }
 
+    //Método Auxiliar: Gera o seed das equipe a partir dos dados de id
     private int seedEquipe(String nome, double orcamento, int motor, int aero, int transm, int susp) {
         int equipeId = jdbcTemplate.queryForObject(
             "INSERT INTO equipe(nome, orcamento, bloqueada) VALUES(?,?,true) RETURNING id",
@@ -233,6 +249,7 @@ public class DadosSeederService {
         return equipeId;
     }
 
+    //Método Auxiliar: Gera o seed dos pilotos a partir dos dados de id
     private int seedPiloto(String nome, String nacionalidade, int idade, int numeroCarro,
                            int habilidade, int consistencia, int equipeId) {
         return jdbcTemplate.queryForObject(
