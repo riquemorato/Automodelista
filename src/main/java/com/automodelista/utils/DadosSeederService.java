@@ -17,10 +17,14 @@ import jakarta.annotation.PostConstruct;
 public class DadosSeederService {
 
     @Autowired DataSource dataSource;
-    JdbcTemplate jdbc;
+    JdbcTemplate jdbcTemplate;
 
+    // DIAGNÓSTICO TEMPORÁRIO — remover depois de confirmar que o reset não entra mais em loop
+    private int resetCallCount = 0;
     @PostConstruct
-    private void init() { jdbc = new JdbcTemplate(dataSource); }
+    private void init() {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
 
     // Sistema de pontuação oficial da F1 (Top 10)
     private static final int[] PONTOS_RODADA_1 = {25, 18, 15, 12, 10, 8, 6, 4, 2, 1};
@@ -73,7 +77,7 @@ public class DadosSeederService {
 
     /** Roda no startup — só popula se o banco estiver vazio. */
     public void popularSeNecessario() {
-        Integer total = jdbc.queryForObject("SELECT COUNT(*) FROM campeonato", Integer.class);
+        Integer total = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM campeonato", Integer.class);
         if (total != null && total > 0) return;
 
         System.out.println("\n[SEED] Banco vazio — populando dados da temporada de 2026...\n");
@@ -85,18 +89,27 @@ public class DadosSeederService {
     /** Reset total — apaga TUDO (incluindo dados do usuário) e recria a temporada do zero. */
     @Transactional
     public void resetarDemo() {
-        System.out.println("\n[RESET] Apagando todos os dados e recriando a temporada do zero...\n");
+        resetCallCount++;
+        if (resetCallCount > 3) {
+            throw new IllegalStateException(
+                "resetarDemo() chamado " + resetCallCount + " vezes consecutivas — provável loop.",
+                new Exception("Stack trace da chamada que excedeu o limite"));
+        }
 
-        jdbc.update("TRUNCATE TABLE participacao, carro, piloto, corrida, equipe, campeonato RESTART IDENTITY CASCADE");
+        System.out.println("\n[RESET] Apagando todos os dados e recriando a temporada do zero... (chamada #" + resetCallCount + ")\n");
+
+        jdbcTemplate.update("TRUNCATE TABLE participacao, carro, piloto, corrida, equipe, campeonato RESTART IDENTITY CASCADE");
 
         criarEstruturaInicial();
         popularResultadosSeed();
 
         System.out.println("[RESET] Concluído — temporada restaurada ao estado inicial.\n");
+
+        resetCallCount = 0; // sucesso — zera o contador para o próximo reset manual
     }
 
     private void criarEstruturaInicial() {
-        int campeonatoId = jdbc.queryForObject(
+        int campeonatoId = jdbcTemplate.queryForObject(
             "INSERT INTO campeonato(nome, temporada) VALUES(?,?) RETURNING id",
             Integer.class, "Fórmula 1 World Championship", 2026);
 
@@ -175,13 +188,13 @@ public class DadosSeederService {
     }
 
     private void popularResultadosSeed() {
-        List<Integer> pilotoIds = jdbc.queryForList(
+        List<Integer> pilotoIds = jdbcTemplate.queryForList(
             "SELECT id FROM piloto WHERE bloqueado = true ORDER BY id", Integer.class);
         if (pilotoIds.size() < 22) return; 
 
-        Integer corridaRodada1 = jdbc.queryForObject(
+        Integer corridaRodada1 = jdbcTemplate.queryForObject(
             "SELECT id FROM corrida WHERE bloqueada = true AND rodada = 1", Integer.class);
-        Integer corridaRodada2 = jdbc.queryForObject(
+        Integer corridaRodada2 = jdbcTemplate.queryForObject(
             "SELECT id FROM corrida WHERE bloqueada = true AND rodada = 2", Integer.class);
 
         // Rodada 1 — Resultados Completos (Com proteção para quem não pontuou)
@@ -190,30 +203,30 @@ public class DadosSeederService {
             int posicao  = POSICOES_RODADA_1[i];
             int pontos   = (posicao <= 10) ? PONTOS_RODADA_1[posicao - 1] : 0;
 
-            jdbc.update(
+            jdbcTemplate.update(
                 "INSERT INTO participacao(piloto_id, corrida_id, posicao_final, pontos_obtidos, tipo_estrategia, compound_pneu, abandonou) " +
                 "VALUES(?,?,?,?,?,?,false)",
                 pilotoId, corridaRodada1, posicao, pontos, "BALANCEADA", "MEDIO");
 
             if (pontos > 0) {
-                jdbc.update("UPDATE piloto SET pontos_campeonato = pontos_campeonato + ? WHERE id=?", pontos, pilotoId);
+                jdbcTemplate.update("UPDATE piloto SET pontos_campeonato = pontos_campeonato + ? WHERE id=?", pontos, pilotoId);
             }
         }
 
         // Rodada 2 — Inscrições de todo o grid
         for (int i = 0; i < 22; i++) {
-            jdbc.update(
+            jdbcTemplate.update(
                 "INSERT INTO participacao(piloto_id, corrida_id, tipo_estrategia, compound_pneu) VALUES(?,?,?,?)",
                 pilotoIds.get(i), corridaRodada2, ESTRATEGIAS_RODADA_2[i], COMPOSTOS_RODADA_2[i]);
         }
     }
 
     private int seedEquipe(String nome, double orcamento, int motor, int aero, int transm, int susp) {
-        int equipeId = jdbc.queryForObject(
+        int equipeId = jdbcTemplate.queryForObject(
             "INSERT INTO equipe(nome, orcamento, bloqueada) VALUES(?,?,true) RETURNING id",
             Integer.class, nome, orcamento);
 
-        jdbc.update(
+        jdbcTemplate.update(
             "INSERT INTO carro(nome, equipe_id, nivel_motor, nivel_aero, nivel_transmissao, nivel_suspensao) VALUES(?,?,?,?,?,?)",
             nome + " — Carro", equipeId, motor, aero, transm, susp);
 
@@ -222,14 +235,14 @@ public class DadosSeederService {
 
     private int seedPiloto(String nome, String nacionalidade, int idade, int numeroCarro,
                            int habilidade, int consistencia, int equipeId) {
-        return jdbc.queryForObject(
+        return jdbcTemplate.queryForObject(
             "INSERT INTO piloto(nome, nacionalidade, idade, numero_carro, habilidade, consistencia, pontos_campeonato, equipe_id, bloqueado) " +
             "VALUES(?,?,?,?,?,?,0,?,true) RETURNING id",
             Integer.class, nome, nacionalidade, idade, numeroCarro, habilidade, consistencia, equipeId);
     }
 
     private int seedCorrida(String nome, String circuito, int rodada, int campeonatoId) {
-        return jdbc.queryForObject(
+        return jdbcTemplate.queryForObject(
             "INSERT INTO corrida(nome, circuito, rodada, status, campeonato_id, bloqueada) VALUES(?,?,?,'PENDENTE',?,true) RETURNING id",
             Integer.class, nome, circuito, rodada, campeonatoId);
     }
