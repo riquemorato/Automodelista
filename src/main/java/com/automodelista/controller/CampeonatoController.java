@@ -1,5 +1,7 @@
 package com.automodelista.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.automodelista.model.Campeonato;
+import com.automodelista.model.Corrida;
+import com.automodelista.model.enums.StatusCorrida;
 import com.automodelista.service.CampeonatoService;
 import com.automodelista.service.PilotoService;
 
@@ -38,12 +42,25 @@ public class CampeonatoController {
         return "redirect:/campeonatos";
     }
 
+    //UPDATE: Traz as informações da proxima corrida a ser simulada para a tela de campeonato
     @GetMapping("/{id}")
     public String detalhe(@PathVariable int id, Model model) {
-        CampeonatoService cs = context.getBean(CampeonatoService.class);
-        model.addAttribute("campeonato", cs.obterPorId(id));
-        model.addAttribute("corridas",   cs.obterCorridas(id));
-        model.addAttribute("standings",  context.getBean(PilotoService.class).gapParaLider());
+
+        CampeonatoService campeonatoService = context.getBean(CampeonatoService.class);
+        List<Corrida> corridas = campeonatoService.obterCorridas(id);
+
+        Corrida proximaCorrida = null;
+        for (Corrida corrida : corridas) {
+            if (corrida.getStatus() == StatusCorrida.PENDENTE) {
+                proximaCorrida = corrida;
+                break;
+            }
+        }
+
+        model.addAttribute("campeonato", campeonatoService.obterPorId(id));
+        model.addAttribute("corridas", corridas);
+        model.addAttribute("proximaCorrida", proximaCorrida);
+        model.addAttribute("standings", context.getBean(PilotoService.class).gapParaLider());
         return "campeonato/detalhe";
     }
 

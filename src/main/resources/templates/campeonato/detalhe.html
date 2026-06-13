@@ -48,6 +48,24 @@
     </div>
 
     <div class="corrida-side">
+
+      <div class="hero-card" th:if="${proximaCorrida}">
+        <div>
+          <div class="hero-card__eyebrow">Próxima corrida — Rodada <span th:text="${proximaCorrida.rodada}"></span></div>
+          <h2 class="hero-card__title" th:text="${proximaCorrida.nome}"></h2>
+          <div class="hero-card__sub" th:text="${proximaCorrida.circuito}"></div>
+        </div>
+      <div class="hero-card__actions">
+        <span class="badge"
+          th:classappend="${proximaCorrida.status.name() == 'EM_ANDAMENTO'} ? 'bg-warning' : 'bg-secondary'"
+          th:text="${proximaCorrida.status.descricao}"></span>
+        <a th:href="@{/corridas/{id}(id=${proximaCorrida.id})}" class="btn btn-primary">Abrir corrida</a>
+      </div>
+    </div>
+
+  <div class="card">
+    <div class="card-header">Nova Corrida</div>
+    <!-- ... resto do card "Nova Corrida", sem alteração ... -->
       <div class="card">
         <div class="card-header">Nova Corrida</div>
         <div class="card-body">
