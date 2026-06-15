@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.automodelista.dao.EquipeDAO;
+import com.automodelista.dao.ParticipacaoCorridaDAO;
 import com.automodelista.dao.PilotoDAO;
 import com.automodelista.model.Equipe;
 import com.automodelista.model.Piloto;
@@ -30,6 +31,7 @@ import com.automodelista.model.PosicaoCampeonatoRecord;
 public class PilotoService {
     @Autowired PilotoDAO pilotoDAO;
     @Autowired EquipeDAO equipeDAO;
+    @Autowired ParticipacaoCorridaDAO participacaoCorridaDAO;
 
     //ATUALIZADO - FILTRO DE DUPLICIDADE - valida antes de efetivar o cadastro
     public void inserir(Piloto piloto){
@@ -75,8 +77,18 @@ public class PilotoService {
         pilotoDAO.atualizar(id, piloto);
     }
 
-    //DELETE - deleta um piloto via ID
+    //DELETE - deleta um piloto via ID - UPDATE: Para que um piloto seja deletado, é preciso que delete primeiro os registros de corrida dele.
+
     public void deletar(int id){
+        //Obtem o id do piloto que será deletado
+        Piloto piloto = pilotoDAO.obterPorId(id);
+        
+        //Joga uma excessão ao tentar excluir um piloto bloqueado.
+        if(piloto.isBloqueado()) {
+            throw new IllegalStateException("Pilotos de referência do campeonato não podem ser excluídos!");
+        }
+        participacaoCorridaDAO.deletarPiloto(id);
+
         pilotoDAO.deletar(id);
     }
 

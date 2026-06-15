@@ -126,7 +126,7 @@ public class CorridaController {
             return "redirect:/corridas/" + id;
         }
 
-        //Tenta iniciar uma corrida
+        //Tenta iniciar uma corrida: Verifica se o id da corrida é valido e se 
         try {
             corridaService.iniciarCorrida(id);
         }

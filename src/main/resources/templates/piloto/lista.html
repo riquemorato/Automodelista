@@ -20,9 +20,14 @@
     <a th:href="@{/pilotos/novo}" class="btn btn-primary">+ Novo Piloto</a>
   </div>
 
+  <!-- WARNING para não deletar registros seed -->>
   <div class="alert alert-warning" th:if="${param.bloqueado}">
     Este piloto faz parte dos dados de referência do campeonato e não pode ser editado.
   </div>
+
+  <!-- aviso de deleção dos dados inseridos pelo usuário -->
+  <div class="alert alert-success" th:if="${mensagem}" th:text="${mensagem}"></div>
+  <div class="alert alert-danger" th:if="${erro}" th:text="${erro}"></div>
 
   <div class="card">
     <div class="card-body p-0">
@@ -47,8 +52,14 @@
               <td>
                 <!-- verifica se o piloto é bloqueado. Se não for bloquado, habilita o botão editar-->
                 <!-- chama o método GET Editar para ir para a tela de edição dos dados do piloto -->
-                <a th:if="${!p.bloqueado}" th:href="@{/pilotos/{id}/editar(id=${p.id})}" class="btn btn-sm btn-outline-secondary">Editar</a>
-                <span th:if="${p.bloqueado}" class="badge badge--locked">🔒 Referência</span>
+                <div th:if="${!p.bloqueado}" class="d-flex gap-1">
+                <a th:href="@{/pilotos/{id}/editar(id=${p.id})}" class="btn btn-sm btn-outline-secondary">Editar</a>
+                <form th:action="@{/pilotos/{id}/deletar(id=${p.id})}" method="post"
+                  onsubmit="return confirm('Remover este piloto? Esta ação não pode ser desfeita.');">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+                </form>
+              </div>
+  <span th:if="${p.bloqueado}" class="badge badge--locked">🔒 Referência</span>
               </td>
             </tr>
             <tr th:if="${#lists.isEmpty(pilotos)}">

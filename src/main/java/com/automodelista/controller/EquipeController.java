@@ -66,10 +66,12 @@ public class EquipeController {
     //Método POST >> Envia os dados editados pelo usuário
     @PostMapping("/{id}/editar")
     public String atualizar(@PathVariable int id, @ModelAttribute Equipe equipe, Model model) {
+        //FIX: faz um try-catch e joga uma excessão caso o usuário tente cadastrar uma equipe com um nome já existente
         try {
             context.getBean(EquipeService.class).atualizar(id, equipe);
             return "redirect:/equipes";
-        } catch (IllegalArgumentException e) {
+        } 
+        catch (IllegalArgumentException e) {
             model.addAttribute("erro", e.getMessage());
             model.addAttribute("equipe", equipe);
             model.addAttribute("id", id);

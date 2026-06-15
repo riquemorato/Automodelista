@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.automodelista.model.Equipe;
 import com.automodelista.model.Piloto;
@@ -134,5 +135,21 @@ public class PilotoController {
         model.addAttribute("equipes", disponiveis);
     }
 
+    //Deleta o piloto com ID Específico
+    //Por que usar Redirect Attributes:
+    //De acordo com a pesquisa realizada para resolver este problema, o RedirectAttribute é uma interface que permite passar
+    //atributos e dados temporários entre diferentes requests, principalmente em cenários de redirecionamento.
+    //Flash attribute: Adiciona uma mensagem de sucesso ou erro na página de lista de pilotos logo após o redirecionamento.
+    @PostMapping("/{id}/deletar")
+    public String deletar(@PathVariable int id, RedirectAttributes redirectAttributes) {
+        try {
+            context.getBean(PilotoService.class).deletar(id);
+            redirectAttributes.addFlashAttribute("mensagem", "Piloto removido com sucesso.");
+        } 
+        catch (IllegalStateException e) {
+        redirectAttributes.addFlashAttribute("erro", e.getMessage());
+        }
+    return "redirect:/pilotos";
+    }
     
 }

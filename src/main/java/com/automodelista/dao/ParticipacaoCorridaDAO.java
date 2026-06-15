@@ -82,7 +82,10 @@ public class ParticipacaoCorridaDAO {
         return arrayListAuxiliar;
     }    
 
-    public void deletar(int id) {
+    //UPDATE: Implementação da deleção de um piloto do sistema.
+    // Para um piloto ser deletado, é preciso primeiro deletar todas as suas entradas nas corridas.
+    // Se ele já correu alguma vez, o seu registro/historico de corridas será deletado para que ele possa ser excluído do sistema.
+    public void deletarPiloto(int id) {
         jdbcTemplate.update("DELETE FROM participacao WHERE id=?", id);
     }
 }
