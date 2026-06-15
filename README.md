@@ -4,7 +4,7 @@
 
 ## Sobre o projeto
 
-O **Automodelista** nasceu como o projeto final da disciplina de Programação Orientada a Objetos. O desafio proposto era construir um sistema web que realizasse operações CRUD com Spring JDBC + Thymeleaf, aplicando os conceitos ensinados durante as aulas de POO. 
+O **Automodelista** nasceu como o projeto final da disciplina de Programação Orientada a Objetos. O desafio proposto era construir um sistema web que realizasse operações CRUD com Spring JDBC + Thymeleaf, aplicando os conceitos ensinados durante as aulas. 
 
 Este projeto tem como objetivo central não construir "mais um CRUD", mas sim aplicar na prática os pilares da Programação Orientada a Objetos: encapsulamento, herança, polimorfismo e abstração, dentro de um domínio que faz sentido e interessante de explorar: a gestão de uma equipe de Fórmula 1 ao longo de uma temporada.
 
