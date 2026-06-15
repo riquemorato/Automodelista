@@ -47,10 +47,12 @@ public class CorridaService {
         participacaoDAO.inserir(new ParticipacaoCorrida(pilotoId, corridaId, tipoEstrategia, compound));
     }
 
-    //Inicia uma corrida:
+    //Inicia uma corrida: Verifica o estado da corrida (ENUM. Se for for diferente de Pendente, a corrida não pode ser inciada.)
+    // Se for pendente, a corrida pode estar em andamento.
     public void iniciarCorrida(int corridaId) {
         Corrida corrida = corridaDAO.obterPorId(corridaId);
-        //TODO: Why??
+        
+        //DONE
         if (corrida.getStatus() != StatusCorrida.PENDENTE){
             throw new IllegalStateException("Corrida já foi iniciada ou encerrada.");
         }  

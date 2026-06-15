@@ -35,15 +35,18 @@
             </tr>
           </thead>
           <tbody>
+            <!-- para cada piloto cadastrado: Mostra numero do carro, o nome a nacionalidade, a equipe, skill, performance e pontuação atual no campeonato-->
             <tr th:each="p : ${pilotos}">
               <td class="num" th:text="${p.numeroCarro}"></td>
               <td th:text="${p.nome}"></td>
               <td class="text-muted" th:text="${p.nacionalidade}"></td>
               <td class="text-muted" th:text="${equipeNomes.get(p.equipeId)}"></td>
-              <td class="num" th:text="${p.habilidade}"></td>
+              <td class="num-" th:text="${p.habilidade}"></td>
               <td class="num" th:text="${p.consistencia}"></td>
               <td class="num"><strong th:text="${p.pontosCampeonato}"></strong></td>
               <td>
+                <!-- verifica se o piloto é bloqueado. Se não for bloquado, habilita o botão editar-->
+                <!-- chama o método GET Editar para ir para a tela de edição dos dados do piloto -->
                 <a th:if="${!p.bloqueado}" th:href="@{/pilotos/{id}/editar(id=${p.id})}" class="btn btn-sm btn-outline-secondary">Editar</a>
                 <span th:if="${p.bloqueado}" class="badge badge--locked">🔒 Referência</span>
               </td>

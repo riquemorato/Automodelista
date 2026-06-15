@@ -32,6 +32,7 @@
             <input type="text" th:field="*{nome}" class="form-control" placeholder="Ex: Alex Hartmann" required>
           </div>
           <div class="col-md-4">
+             <!-- Não permite numeros negativos ou maior que 99 -->
             <label class="form-label">Nº do carro</label>
             <input type="number" th:field="*{numeroCarro}" class="form-control" min="0" max="99" required>
           </div>
@@ -40,9 +41,11 @@
         <div class="row g-3 mb-1">
           <div class="col-md-8">
             <label class="form-label">País de Origem</label>
+            <!-- ia fazer um dropdown menu mas deu preguiça, vai na boa vontade do usuário mesmo -->
             <input type="text" th:field="*{nacionalidade}" class="form-control" placeholder="Ex: Brasil" required>
           </div>
           <div class="col-md-4">
+             <!-- Não permite pilotos menores de 16 anos e maiores que 60 (pelo menos na F1) -->
             <label class="form-label">Idade</label>
             <input type="number" th:field="*{idade}" class="form-control" min="16" max="60" required>
           </div>

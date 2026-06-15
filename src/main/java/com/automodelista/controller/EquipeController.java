@@ -55,6 +55,7 @@ public class EquipeController {
         }
     }
 
+    //Método GET >> Exibe o formulário preenchido com os dados quando o usuário clicar em "Editar Equipe"
     @GetMapping("/{id}/editar")
     public String editar(@PathVariable int id, Model model) {
         model.addAttribute("equipe", context.getBean(EquipeService.class).obterPorId(id));
@@ -62,6 +63,7 @@ public class EquipeController {
         return "equipe/form-editar";
     }
 
+    //Método POST >> Envia os dados editados pelo usuário
     @PostMapping("/{id}/editar")
     public String atualizar(@PathVariable int id, @ModelAttribute Equipe equipe, Model model) {
         try {

@@ -41,6 +41,7 @@ public class PilotoController {
     @Autowired ApplicationContext context;
 
     //Lista todos os pilotos cadastrados.
+    //Método HTTP GET - Somente leitura
     @GetMapping
     public String listar(Model model) {
         List<Piloto> pilotos = context.getBean(PilotoService.class).obterTodos();
@@ -67,9 +68,11 @@ public class PilotoController {
 
     //Método POST atualizado: validação de duplicidade
     //Não permite registrar dois pilotos com o mesmo nome.
+    //Método HTTP POST - Escrita/alteracao de dados
     @PostMapping("/novo")
     public String salvar(@ModelAttribute Piloto piloto, Model model) {
-        try {
+        try {   
+            //Método chamado ao clicar em salvar. Chama o INSERT em PilotoDAO
             context.getBean(PilotoService.class).inserir(piloto);
             return "redirect:/pilotos";
         } catch (IllegalArgumentException e) {
@@ -82,6 +85,7 @@ public class PilotoController {
 
     //Edita os pilotos cadastrados.
     //Update: Permite editar apenas os pilotos adicionados pelo usuário, e não o seed.
+    //Edita os dados do piloto passando o ID dele.
     @GetMapping("/{id}/editar")
     public String editar(@PathVariable int id, Model model) {
 
@@ -104,7 +108,7 @@ public class PilotoController {
         model.addAttribute("id", id);
         return "piloto/form-editar";
     }
-    
+
     @PostMapping("/{id}/editar")
     public String atualizar(@PathVariable int id, @ModelAttribute Piloto piloto, Model model) {
         
