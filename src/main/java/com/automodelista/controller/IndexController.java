@@ -61,9 +61,9 @@ public class IndexController {
 
             // Próxima corrida = primeira que ainda não foi finalizada (lista já vem ordenada por rodada)
             Corrida proxima = null;
-            for (Corrida c : corridas) {
-                if (c.getStatus() != StatusCorrida.FINALIZADA) {
-                    proxima = c;
+            for (Corrida corrida : corridas) {
+                if (corrida.getStatus() != StatusCorrida.FINALIZADA) {
+                    proxima = corrida;
                     break;
                 }
             }

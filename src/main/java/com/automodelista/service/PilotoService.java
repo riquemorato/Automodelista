@@ -26,7 +26,6 @@ import com.automodelista.model.PosicaoCampeonatoRecord;
  */
 
 //BOILERPLATE baseado no ClienteService do projeto original realizado em sala.
-
 @Service
 public class PilotoService {
     @Autowired PilotoDAO pilotoDAO;
@@ -61,7 +60,7 @@ public class PilotoService {
         return pilotoDAO.obterPorEquipe(id);
     }
 
-    //UPDATE - atualiza os dados de um piloto via ID - ATUALIZADO: FILTRO DE DUPLICIDADE - valida antes de efetivar o cadastro
+    //Atualização - atualiza os dados de um piloto via ID - ATUALIZADO: FILTRO DE DUPLICIDADE - valida antes de efetivar o cadastro
     public void atualizar(int id, Piloto piloto){
         
         //Verifica se já existe um piloto com o nome digitado cadastrado
@@ -94,24 +93,34 @@ public class PilotoService {
 
     //OBTEM POSICAO NO CAMPEONATO
     public List<PosicaoCampeonatoRecord> gapParaLider() {
+        //Obtem todos os pilotos cadastrados no sistema
         List<Piloto> pilotos = pilotoDAO.obterTodos();
-        int liderPts = pilotos.isEmpty() ? 0 : pilotos.get(0).getPontosCampeonato();
 
+        //Captura a posição da pontuação do lider
+        int pontosLider = pilotos.isEmpty() ? 0 : pilotos.get(0).getPontosCampeonato();
+
+        //Mapeia o equipeID com o nome da equipe correspondente
         Map<Integer, String> equipeNomes = new HashMap<>();
         for (Equipe equipe : equipeDAO.obterTodos()) {
             equipeNomes.put(equipe.getId(), equipe.getNome());
         }
 
-        List<PosicaoCampeonatoRecord> standings = new ArrayList<>();
+        //Cria uma lista imutável com o campeonato de pilotos atualizado.
+        //O posicao campeonato record tem: int posicao, String nomePiloto, String nomeEquipe, int pontos, int gapParaLider
+        List<PosicaoCampeonatoRecord> classificacao = new ArrayList<>();
+
+        //Pega a quantidade de pilotos, e para cada piloto:
+        //atribui o nome da equipe para o piloto através do EquipeID
+        // 
         for (int i = 0; i < pilotos.size(); i++) {
             Piloto piloto = pilotos.get(i);
             String nomeEquipe = equipeNomes.getOrDefault(piloto.getEquipeId(), "—");
-            standings.add(new PosicaoCampeonatoRecord(
+            classificacao.add(new PosicaoCampeonatoRecord(
                 i + 1, piloto.getNome(), nomeEquipe,
-                piloto.getPontosCampeonato(), liderPts - piloto.getPontosCampeonato()));
+                piloto.getPontosCampeonato(), pontosLider - piloto.getPontosCampeonato()));
         }
 
-        return standings;
+        return classificacao;
     }
 
     

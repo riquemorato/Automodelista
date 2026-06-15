@@ -35,7 +35,8 @@ public class ClassificacaoController {
         Campeonato selecionado = null;
         if (campeonatoId != null) {
             selecionado = campeonatoService.obterPorId(campeonatoId);
-        } else if (!campeonatos.isEmpty()) {
+        } 
+        else if (!campeonatos.isEmpty()) {
             selecionado = campeonatos.get(0);
         }
 
