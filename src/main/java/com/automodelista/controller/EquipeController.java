@@ -27,12 +27,15 @@ import com.automodelista.service.EquipeService;
 public class EquipeController {
     @Autowired ApplicationContext context;
 
+
+    //Lista todas as equipes
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("equipes", context.getBean(EquipeService.class).obterTodas());
         return "equipe/lista";
     }
 
+    //Adiciona uma nova equipe
     @GetMapping("/nova")
     public String formulario(Model model) {
         model.addAttribute("equipe", new Equipe());

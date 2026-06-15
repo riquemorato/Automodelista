@@ -31,7 +31,7 @@ import com.automodelista.service.PilotoService;
  */
 
 //Classe responsavel por popular a UI do usuário com os dados a partir dos models
-//Copiado do boilerplate gerado em ClienteController/MainController
+//Copiado do boilerplate gerado em sala -> ClienteController/MainController
 
 @Controller
 @RequestMapping("/pilotos")
@@ -40,6 +40,7 @@ public class PilotoController {
     //context com DB
     @Autowired ApplicationContext context;
 
+    //Lista todos os pilotos cadastrados.
     @GetMapping
     public String listar(Model model) {
         List<Piloto> pilotos = context.getBean(PilotoService.class).obterTodos();
@@ -55,6 +56,7 @@ public class PilotoController {
         return "piloto/lista";
     }
 
+    //Adiciona um novo registro de piloto
     @GetMapping("/novo")
     public String formulario(Model model) {
         model.addAttribute("piloto", new Piloto());
@@ -63,7 +65,8 @@ public class PilotoController {
     }
 
 
-    //Método POST atualizado com validação de duplicidade
+    //Método POST atualizado: validação de duplicidade
+    //Não permite registrar dois pilotos com o mesmo nome.
     @PostMapping("/novo")
     public String salvar(@ModelAttribute Piloto piloto, Model model) {
         try {
@@ -77,14 +80,23 @@ public class PilotoController {
         }
     }
 
+    //Edita os pilotos cadastrados.
+    //Update: Permite editar apenas os pilotos adicionados pelo usuário, e não o seed.
     @GetMapping("/{id}/editar")
     public String editar(@PathVariable int id, Model model) {
+
+
         Piloto piloto = context.getBean(PilotoService.class).obterPorId(id);
-        if (piloto.isBloqueado()) return "redirect:/pilotos?bloqueado=1";
+        
+        //Verifica se o piloto que será editado é do seed (bloqueado)
+        //Se for, faz um redirect para a lista inicial.
+        if (piloto.isBloqueado()) {
+            return "redirect:/pilotos?bloqueado=1";
+        } 
 
         List<Equipe> disponiveis = new ArrayList<>();
-        for (Equipe e : context.getBean(EquipeService.class).obterTodas()) {
-            if (!e.isBloqueada()) disponiveis.add(e);
+        for (Equipe equipe : context.getBean(EquipeService.class).obterTodas()) {
+            if (!equipe.isBloqueada()) disponiveis.add(equipe);
         }
 
         model.addAttribute("piloto", piloto);
@@ -92,7 +104,7 @@ public class PilotoController {
         model.addAttribute("id", id);
         return "piloto/form-editar";
     }
-
+    
     @PostMapping("/{id}/editar")
     public String atualizar(@PathVariable int id, @ModelAttribute Piloto piloto, Model model) {
         
