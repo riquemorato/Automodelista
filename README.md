@@ -153,3 +153,11 @@ O **Painel Admin** (`/admin`) permite resetar a demonstração a qualquer moment
 - Histórico detalhado por corrida, incluindo estratégia e composto de pneu utilizados no resultado.
 - Sistema de desenvolvimento de carro entre corridas (investir orçamento em melhorias incrementais).
 - Deploy público (Render) para demonstração sem necessidade de ambiente local.
+
+## Uso de IA no projeto:
+Inteligência artificial foi utilizada para:
+- Validação e simplificação da complexidade inicial da regra de negócio;
+- Validação da lógica da camada de simulação;
+- Correção de um bug fatal no processo de reset dos dados de demonstração;
+- Implementação da parte estética do frontend;
+- Geração do Readme do projeto;
