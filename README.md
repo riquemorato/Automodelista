@@ -154,9 +154,7 @@ O **Painel Admin** (`/admin`) permite resetar a demonstração a qualquer moment
 - Sistema de desenvolvimento de carro entre corridas (investir orçamento em melhorias incrementais).
 - Deploy público (Render) para demonstração sem necessidade de ambiente local.
 
-###
-
-Uso de IA no projeto:
+## Uso de IA no projeto:
 Inteligência artificial foi utilizada para:
 - Validação e simplificação da complexidade inicial da regra de negócio;
 - Validação da lógica da camada de simulação;
