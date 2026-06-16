@@ -12,7 +12,7 @@ Toda a persistência foi implementada com **JDBC puro (`JdbcTemplate`)**, sem OR
 
 ## A inspiração
 
-A inspiração veio de jogos de gestão de automobilismo como **F1 Manager 24** e **Motorsports Manager** — títulos em que o jogador não pilota um carro, mas atua como *team principal*: contrata pilotos, desenvolve o carro, define estratégias de corrida e acompanha os resultados ao longo do campeonato. O nome do projeto é uma brincadeira com um simulador de automobilismo virtual produzido no Brasil chamado **Automobilista**
+A inspiração veio de jogos de gestão de automobilismo como **F1 Manager 24** e **Motorsports Manager**, títulos em que o jogador não pilota um carro, mas atua como *chefe de equipe*: contrata pilotos, desenvolve o carro, define estratégias de corrida e acompanha os resultados ao longo do campeonato. O nome do projeto é uma brincadeira com um simulador de automobilismo virtual produzido no Brasil chamado **Automobilista**
 
 Desde o ínicio, a ideia do projeto foi *"desenvolver uma versão mais simples possível da experiência oferecida nesses jogos, mas construída inteiramente com conceitos de programação vistos em sala de aula."*
 
@@ -33,13 +33,13 @@ Esses scores são ordenados, posições e pontos são atribuídos seguindo o sis
 
 ## Funcionalidades
 
-- **Dashboard** — visão geral da temporada: próxima corrida, classificação, calendário, equipes e pilotos.
-- **Pilotos** — cadastro, edição e listagem, com atributos de habilidade e consistência.
-- **Equipes** — cadastro, edição e listagem, com orçamento e carro associado (motor, aero, transmissão, suspensão).
-- **Campeonatos e Corridas** — calendário de corridas por campeonato, inscrição de pilotos em cada corrida (estratégia + composto de pneu).
-- **Simulação de corrida** — botão "Simular Corrida" gera o resultado com base na fórmula de desempenho, atualiza posições, pontos e status da corrida.
-- **Classificação (Standings)** — ranking geral de pilotos por pontos no campeonato.
-- **Painel administrativo** — reset de demonstração, que apaga todos os dados e recria a temporada a partir do zero.
+- **Dashboard**: visão geral da temporada: próxima corrida, classificação, calendário, equipes e pilotos.
+- **Pilotos**: cadastro, edição e listagem, com atributos de habilidade e consistência.
+- **Equipes**: cadastro, edição e listagem, com orçamento e carro associado (motor, aero, transmissão, suspensão).
+- **Campeonatos e Corridas**: calendário de corridas por campeonato, inscrição de pilotos em cada corrida (estratégia + composto de pneu).
+- **Simulação de corrida**: botão "Simular Corrida" gera o resultado com base na fórmula de desempenho, atualiza posições, pontos e status da corrida.
+- **Classificação (Standings)**: ranking geral de pilotos por pontos no campeonato.
+- **Painel administrativo**: reset de demonstração, que apaga todos os dados e recria a temporada a partir do zero.
 
 ## Como funciona a simulação
 
@@ -156,8 +156,7 @@ O **Painel Admin** (`/admin`) permite resetar a demonstração a qualquer moment
 
 ## Uso de IA no projeto:
 Inteligência artificial foi utilizada para:
-- Validação e simplificação da complexidade inicial da regra de negócio;
-- Validação da lógica da camada de simulação;
+- Validação e simplificação da complexidade inicial da regra de negócio, uma vez que o projeto estava com o escopo muito grande e não teria tempo hábil para realizar toda implementação;
 - Correção de um bug fatal no processo de reset dos dados de demonstração;
 - Implementação da parte estética do frontend;
 - Geração do Readme do projeto;
