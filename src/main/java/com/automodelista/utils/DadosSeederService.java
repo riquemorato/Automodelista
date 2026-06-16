@@ -200,12 +200,12 @@ public class DadosSeederService {
         //Gera uma lista com pilotos id a partir da query
         List<Integer> pilotoIds = jdbcTemplate.queryForList(
             "SELECT id FROM piloto WHERE bloqueado = true ORDER BY id", Integer.class);
-        if (pilotoIds.size() < 22) return; 
+        if (pilotoIds.size() < 22) {
+            return; 
+        }
 
-        Integer corridaRodada1 = jdbcTemplate.queryForObject(
-            "SELECT id FROM corrida WHERE bloqueada = true AND rodada = 1", Integer.class);
-        Integer corridaRodada2 = jdbcTemplate.queryForObject(
-            "SELECT id FROM corrida WHERE bloqueada = true AND rodada = 2", Integer.class);
+        Integer corridaRodada1 = jdbcTemplate.queryForObject( "SELECT id FROM corrida WHERE bloqueada = true AND rodada = 1", Integer.class);
+        Integer corridaRodada2 = jdbcTemplate.queryForObject( "SELECT id FROM corrida WHERE bloqueada = true AND rodada = 2", Integer.class);
 
         // Rodada 1 — Resultados Completos (Com proteção para quem não pontuou)
         for (int i = 0; i < 22; i++) {
@@ -239,12 +239,10 @@ public class DadosSeederService {
     //Método Auxiliar: Gera o seed das equipe a partir dos dados de id
     private int seedEquipe(String nome, double orcamento, int motor, int aero, int transm, int susp) {
         int equipeId = jdbcTemplate.queryForObject(
-            "INSERT INTO equipe(nome, orcamento, bloqueada) VALUES(?,?,true) RETURNING id",
-            Integer.class, nome, orcamento);
+            "INSERT INTO equipe(nome, orcamento, bloqueada) VALUES(?,?,true) RETURNING id", Integer.class, nome, orcamento);
 
         jdbcTemplate.update(
-            "INSERT INTO carro(nome, equipe_id, nivel_motor, nivel_aero, nivel_transmissao, nivel_suspensao) VALUES(?,?,?,?,?,?)",
-            nome + " — Carro", equipeId, motor, aero, transm, susp);
+            "INSERT INTO carro(nome, equipe_id, nivel_motor, nivel_aero, nivel_transmissao, nivel_suspensao) VALUES(?,?,?,?,?,?)", nome + " — Carro", equipeId, motor, aero, transm, susp);
 
         return equipeId;
     }
