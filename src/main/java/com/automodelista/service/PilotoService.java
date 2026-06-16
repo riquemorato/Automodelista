@@ -96,7 +96,7 @@ public class PilotoService {
         //Obtem todos os pilotos cadastrados no sistema
         List<Piloto> pilotos = pilotoDAO.obterTodos();
 
-        //Captura a posição da pontuação do lider
+        //Captura quantos pontos o líder tem no campeonato
         int pontosLider = pilotos.isEmpty() ? 0 : pilotos.get(0).getPontosCampeonato();
 
         //Mapeia o equipeID com o nome da equipe correspondente
@@ -111,13 +111,11 @@ public class PilotoService {
 
         //Pega a quantidade de pilotos, e para cada piloto:
         //atribui o nome da equipe para o piloto através do EquipeID
-        // 
         for (int i = 0; i < pilotos.size(); i++) {
             Piloto piloto = pilotos.get(i);
             String nomeEquipe = equipeNomes.getOrDefault(piloto.getEquipeId(), "—");
-            classificacao.add(new PosicaoCampeonatoRecord(
-                i + 1, piloto.getNome(), nomeEquipe,
-                piloto.getPontosCampeonato(), pontosLider - piloto.getPontosCampeonato()));
+            //Adiciona os dados do piloto ao Record da classificacao + calcula a diferença entre a pontuação do lider e o piloto em index [i]
+            classificacao.add(new PosicaoCampeonatoRecord(i + 1, piloto.getNome(), nomeEquipe, piloto.getPontosCampeonato(), pontosLider - piloto.getPontosCampeonato()));
         }
 
         return classificacao;
