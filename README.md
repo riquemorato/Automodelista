@@ -156,8 +156,7 @@ O **Painel Admin** (`/admin`) permite resetar a demonstração a qualquer moment
 
 ## Uso de IA no projeto:
 Inteligência artificial foi utilizada para:
-- Validação e simplificação da complexidade inicial da regra de negócio;
-- Validação da lógica da camada de simulação;
+- Validação e simplificação da complexidade inicial da regra de negócio, uma vez que o projeto estava com o escopo muito grande e não teria tempo hábil para realizar toda implementação;
 - Correção de um bug fatal no processo de reset dos dados de demonstração;
 - Implementação da parte estética do frontend;
 - Geração do Readme do projeto;
